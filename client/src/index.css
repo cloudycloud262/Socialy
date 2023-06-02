@@ -37,6 +37,7 @@ button {
 /* Input */
 .filled-input {
   display: flex;
+  align-items: center;
   gap: 0.2rem;
   background-color: rgb(234, 234, 234);
   padding: 0.6rem;

@@ -3,6 +3,10 @@ interface Signup {
   username: string;
   password: string;
 }
+interface Login {
+  email: string;
+  password: string;
+}
 
 export const isEmail = (str: string): Boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,7 +26,7 @@ export const signupValidator = (args: Signup): Signup => {
   };
 
   if (!args.email) {
-    res.email = "Please enter a Email";
+    res.email = "Please enter an Email";
   } else if (!isEmail(args.email)) {
     res.email = "Please enter a valid Email";
   }
@@ -41,6 +45,23 @@ export const signupValidator = (args: Signup): Signup => {
     res.password = "Please enter a Password";
   } else if (args.password.length < 6) {
     res.password = "Password should be more than 6 characters";
+  }
+
+  return res;
+};
+
+export const loginValidator = (args: Login): Login => {
+  const res = {
+    email: "",
+    password: "",
+  };
+
+  if (!args.email) {
+    res.email = "Please enter an Email";
+  }
+
+  if (!args.password) {
+    res.password = "Please enter your Password";
   }
 
   return res;
