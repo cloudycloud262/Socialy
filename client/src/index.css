@@ -8,8 +8,13 @@ body {
   margin: 0;
 }
 #root {
-  background-color: gainsboro;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+}
+
+a {
+  text-decoration: none;
 }
 
 input,
@@ -20,12 +25,16 @@ button {
   outline: none;
 }
 /* Button */
-button {
-  transition-duration: 0.15s;
-  transition-property: background-color, border, color;
+button,
+.btn {
+  transition-duration: 0.2s;
+  transition-property: background-color, border, color, box-shadow;
   padding: 0.6rem;
   outline: none;
   border-radius: 0.15rem;
+}
+.btn {
+  text-align: center;
 }
 
 .contained-btn {
@@ -45,6 +54,17 @@ button {
 }
 .transparent-btn:hover {
   background-color: rgb(237, 237, 237);
+}
+
+.outlined-btn {
+  background-color: transparent;
+  color: #62a6fe;
+  border: 2px solid;
+}
+.outlined-btn:hover {
+  background-color: #62a6fe;
+  color: white;
+  border: 2px solid #62a6fe;
 }
 
 .icon-btn {

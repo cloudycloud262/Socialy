@@ -1,6 +1,6 @@
 .bg {
   display: flex;
-  height: 100vh;
+  flex-grow: 1;
   box-sizing: border-box;
 }
 .wrapper {

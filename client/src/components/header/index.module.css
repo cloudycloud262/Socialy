@@ -5,6 +5,7 @@
   padding: 0 2rem;
   gap: 2.5rem;
   background-color: white;
+  border-bottom: 1px solid rgb(195, 195, 195);
 }
 
 .search {
@@ -12,6 +13,7 @@
   z-index: 1;
   max-width: 380px;
   box-sizing: border-box;
+  margin: 0 auto;
 }
 .searchIcon {
   display: none;
@@ -27,7 +29,6 @@
 }
 .navItem {
   display: flex;
-  text-decoration: none;
 }
 .navItem > :global(.material-icons-outlined),
 .account > :global(.material-icons-outlined),
@@ -45,6 +46,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.3rem 0;
+  cursor: pointer;
 }
 
 @media (width<900px) {
@@ -88,6 +90,7 @@
     width: 100%;
     height: 40px;
     background-color: white;
+    border-top: 1px solid rgb(195, 195, 195);
   }
   .navItem {
     flex-grow: 1;
