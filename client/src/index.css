@@ -7,6 +7,10 @@ body {
   font-family: Manrope;
   margin: 0;
 }
+#root {
+  background-color: gainsboro;
+  height: 100vh;
+}
 
 input,
 button {
@@ -20,6 +24,7 @@ button {
   transition-duration: 0.15s;
   transition-property: background-color, border, color;
   padding: 0.6rem;
+  outline: none;
   border-radius: 0.15rem;
 }
 
@@ -32,6 +37,20 @@ button {
   background-color: white;
   color: #62a6fe;
   border: 1px solid;
+}
+
+.transparent-btn {
+  background-color: transparent;
+  border: none;
+}
+.transparent-btn:hover {
+  background-color: rgb(237, 237, 237);
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 /* Input */
@@ -60,6 +79,11 @@ button {
   background-color: transparent;
 }
 
+.account-icon {
+  height: 27px;
+  border-radius: 0.15rem;
+}
+
 .fw-medium {
   font-weight: 600;
 }
@@ -82,4 +106,38 @@ button {
 .logo > span {
   font-weight: 800;
   font-size: 1.3rem;
+}
+
+.menu-wrapper {
+  position: relative;
+}
+.menu {
+  position: absolute;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  right: 0;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  width: max-content;
+  border-radius: 0.2rem;
+  filter: drop-shadow(0px 0px 1px grey);
+  transform: scale(0);
+  transform-origin: top right;
+  transition: 0.15s;
+}
+.menu-active {
+  transform: scale(1);
+  transform-origin: top right;
+}
+.menu-item {
+  color: grey;
+}
+.menu-item > .material-icons-outlined {
+  font-size: 1.35rem;
+}
+
+.danger-btn {
+  color: red;
 }
