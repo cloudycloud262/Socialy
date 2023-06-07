@@ -4,7 +4,8 @@ type TextAreaProps = {
   value: string;
   onChange: (val: string) => void;
   placeholder: string;
-  maxLength: number;
+  maxLength?: number;
+  className?: string;
 };
 
 const Textarea: FC<TextAreaProps> = (props) => {
@@ -21,6 +22,7 @@ const Textarea: FC<TextAreaProps> = (props) => {
   return (
     <textarea
       value={props.value}
+      className={props.className}
       onChange={changeHandler}
       rows={1}
       placeholder={props.placeholder}

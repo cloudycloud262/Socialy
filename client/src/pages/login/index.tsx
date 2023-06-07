@@ -43,6 +43,7 @@ const Login: FC = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  errors.email && setErrors((prev) => ({ ...prev, email: "" }));
                 }}
               />
             </label>
@@ -58,6 +59,8 @@ const Login: FC = () => {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
+                  errors.password &&
+                    setErrors((prev) => ({ ...prev, password: "" }));
                 }}
               />
               {showPassword ? (

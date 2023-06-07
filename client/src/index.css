@@ -17,6 +17,13 @@ a {
   text-decoration: none;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-self: stretch;
+}
+
 input,
 textarea,
 button {
@@ -24,9 +31,11 @@ button {
   font-weight: 600;
   font-size: 0.85rem;
   outline: none;
+  border: none;
 }
 textarea {
   resize: none;
+  max-height: 200px;
 }
 /* Button */
 button,
@@ -108,7 +117,7 @@ button,
   background-color: transparent;
 }
 
-.account-icon {
+.dp-icon {
   height: 27px;
   border-radius: 0.15rem;
 }
@@ -172,9 +181,53 @@ button,
   color: red;
 }
 
-form {
+.list-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  align-self: stretch;
+  background-color: gainsboro;
+  gap: 1px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  background-color: gainsboro;
+  gap: 1px;
+}
+.list-header {
+  padding: 0.6rem;
+  background-color: white;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: white;
+  padding: 0.6rem;
+  transition: 0.15s box-shadow;
+}
+.user-item > span:nth-of-type(1) {
+  margin-right: auto;
+}
+.user-item-hover:hover {
+  box-shadow: inset 0px 0px 4px 1px #62a6fe;
+}
+.user-item > .material-icons-outlined {
+  font-size: 1.3rem;
+  color: grey;
+}
+
+.chat-area {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+}
+.chat-area > textarea {
+  flex-grow: 1;
+}
+.chat-area > .material-icons-outlined {
+  cursor: pointer;
 }

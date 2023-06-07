@@ -1,11 +1,10 @@
-interface Signup {
-  email: string;
-  username: string;
-  password: string;
-}
 interface Login {
   email: string;
   password: string;
+}
+
+interface Signup extends Login {
+  username: string;
 }
 
 export const isEmail = (str: string): Boolean => {

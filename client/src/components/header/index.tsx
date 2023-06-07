@@ -57,7 +57,7 @@ const Header: FC = () => {
           className={styles.account}
           onClick={() => setShowAccMenu((prev) => !prev)}
         >
-          <img src="/placeholderDp.png" alt="" className="account-icon" />
+          <img src="/placeholderDp.png" alt="" className="dp-icon" />
           <span className="fs-medium fw-medium">Chrome</span>
           <span className="material-icons-outlined">arrow_drop_down</span>
         </div>

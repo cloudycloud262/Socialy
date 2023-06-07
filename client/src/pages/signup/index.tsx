@@ -45,6 +45,7 @@ const Signup: FC = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  errors.email && setErrors((prev) => ({ ...prev, email: "" }));
                 }}
               />
             </label>
@@ -60,6 +61,8 @@ const Signup: FC = () => {
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
+                  errors.username &&
+                    setErrors((prev) => ({ ...prev, username: "" }));
                 }}
               />
             </label>
@@ -75,6 +78,8 @@ const Signup: FC = () => {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
+                  errors.password &&
+                    setErrors((prev) => ({ ...prev, password: "" }));
                 }}
               />
               {showPassword ? (

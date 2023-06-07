@@ -1,0 +1,80 @@
+.wrapper {
+  display: flex;
+  overflow: auto;
+  background-color: gainsboro;
+  gap: 2px;
+  position: relative;
+}
+
+.list {
+  flex-grow: 0.5;
+  max-width: 450px;
+  min-width: 300px;
+  flex-basis: 0;
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+  flex-basis: 0;
+  background-color: gainsboro;
+}
+.roomHeader > :global(.material-icons-outlined) {
+  display: none;
+}
+
+.chats {
+  background-color: white;
+  flex-grow: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+}
+.bubble {
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.15rem;
+  max-width: 45%;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.sentBubble {
+  margin-left: auto;
+
+  color: white;
+  background-color: #62a6fe;
+}
+.receivedBubble {
+  margin-right: auto;
+  color: #62a6fe;
+  border: 2px solid;
+}
+.nfBubble {
+  margin: 0 auto;
+  background-color: rgb(255, 243, 180);
+}
+
+@media (width<650px) {
+  .list {
+    flex-grow: 1;
+    max-width: 650px;
+  }
+  .room {
+    position: absolute;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: 0.2s;
+  }
+  .roomActive {
+    transform: scaleY(1);
+  }
+  .roomHeader > :global(.material-icons-outlined) {
+    display: inline;
+  }
+}
