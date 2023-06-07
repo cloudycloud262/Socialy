@@ -24,7 +24,6 @@ const Login: FC = () => {
           Share your thoughts with people and create connections
         </p>
         <form
-          className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
             const err = loginValidator({ email, password });

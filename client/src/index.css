@@ -18,11 +18,15 @@ a {
 }
 
 input,
+textarea,
 button {
   font-family: Manrope;
   font-weight: 600;
   font-size: 0.85rem;
   outline: none;
+}
+textarea {
+  resize: none;
 }
 /* Button */
 button,
@@ -32,6 +36,7 @@ button,
   padding: 0.6rem;
   outline: none;
   border-radius: 0.15rem;
+  justify-content: center;
 }
 .btn {
   text-align: center;
@@ -72,6 +77,9 @@ button,
   align-items: center;
   gap: 0.3rem;
 }
+.icon-btn > .material-icons-outlined {
+  font-size: 1.2rem;
+}
 
 /* Input */
 .filled-input {
@@ -92,7 +100,8 @@ button,
   color: grey;
   font-size: 1.2rem;
 }
-.filled-input > input {
+.filled-input > input,
+.filled-input > textarea {
   flex-grow: 1;
   border: none;
   outline: none;
@@ -127,7 +136,7 @@ button,
   font-weight: 800;
   font-size: 1.3rem;
 }
-
+/* Menucard */
 .menu-wrapper {
   position: relative;
 }
@@ -153,6 +162,7 @@ button,
 }
 .menu-item {
   color: grey;
+  justify-content: flex-start;
 }
 .menu-item > .material-icons-outlined {
   font-size: 1.35rem;
@@ -160,4 +170,11 @@ button,
 
 .danger-btn {
   color: red;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-self: stretch;
 }

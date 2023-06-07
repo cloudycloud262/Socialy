@@ -2,12 +2,12 @@ import { FC } from "react";
 
 import Layout from "../../components/layout";
 
-const Home: FC = () => {
+const Explore: FC = () => {
   return (
     <Layout>
-      <>Home</>
+      <>Explore</>
     </Layout>
   );
 };
 
-export default Home;
+export default Explore;

@@ -1,8 +1,9 @@
+import { FC } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "./index.module.css";
 
-export default function PageNotFound() {
+const PageNotFound: FC = () => {
   return (
     <div className={styles.bg}>
       <div className={styles.main}>
@@ -16,4 +17,6 @@ export default function PageNotFound() {
       </div>
     </div>
   );
-}
+};
+
+export default PageNotFound;

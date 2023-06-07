@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, FC } from "react";
 import useCloseOnOutsideClick from "../../hooks/useCloseOnOutsideClick";
 import { useNavigate } from "react-router-dom";
 
@@ -6,10 +6,11 @@ import Navbar from "./navbar";
 
 import styles from "./index.module.css";
 
-export default function Header() {
+const Header: FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showAccMenu, setShowAccMenu] = useState(false);
-  const accountMenuRef = useRef(null);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
+  const searchFieldRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useCloseOnOutsideClick(accountMenuRef, () => setShowAccMenu(false));
@@ -27,7 +28,13 @@ export default function Header() {
         }`}
       >
         <span className="material-icons-outlined">search</span>
-        <input type="text" id="search" placeholder="Search Account" />
+        <input
+          type="text"
+          id="search"
+          placeholder="Search Account"
+          ref={searchFieldRef}
+          onBlur={() => setShowSearchBar(false)}
+        />
         <span
           className="material-icons-outlined"
           onClick={() => setShowSearchBar(false)}
@@ -37,7 +44,10 @@ export default function Header() {
       </label>
       <span
         className={`material-icons-outlined ${styles.searchIcon}`}
-        onClick={() => setShowSearchBar(true)}
+        onClick={() => {
+          searchFieldRef.current?.focus();
+          setShowSearchBar(true);
+        }}
       >
         search
       </span>
@@ -70,4 +80,6 @@ export default function Header() {
       </div>
     </div>
   );
-}
+};
+
+export default Header;

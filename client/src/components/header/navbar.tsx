@@ -1,10 +1,11 @@
+import { FC } from "react";
 import { useState } from "react";
 
 import { Link } from "react-router-dom";
 
 import styles from "./index.module.css";
 
-export default function Navbar() {
+const Navbar: FC = () => {
   const [active, setActive] = useState("");
 
   return (
@@ -76,4 +77,6 @@ export default function Navbar() {
       </Link>
     </div>
   );
-}
+};
+
+export default Navbar;

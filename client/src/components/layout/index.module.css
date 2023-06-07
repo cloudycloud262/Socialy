@@ -1,0 +1,50 @@
+.wrapper {
+  display: flex;
+  flex-grow: 1;
+  gap: 1.5px;
+  padding: 0.6rem;
+  gap: 0.5rem;
+}
+.card {
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid gainsboro;
+  border-radius: 0.15rem;
+}
+.left,
+.right,
+.center {
+  flex-basis: 0;
+}
+.left,
+.right {
+  flex-grow: 0.7;
+  min-width: 300px;
+}
+.center {
+  flex-grow: 1;
+}
+.center > .createPost {
+  display: none;
+}
+
+@media (width<1000px) {
+  .right {
+    display: none;
+  }
+}
+@media (width<700px) {
+  .wrapper {
+    padding: 0;
+  }
+  .card {
+    border: none;
+    border-radius: 0rem;
+  }
+  .left {
+    display: none;
+  }
+  .center > .createPost {
+    display: flex;
+  }
+}

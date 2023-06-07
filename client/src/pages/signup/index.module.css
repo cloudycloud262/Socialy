@@ -19,12 +19,6 @@
 .branding {
   text-align: center;
 }
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  align-self: stretch;
-}
 .line {
   height: 1px;
   align-self: stretch;

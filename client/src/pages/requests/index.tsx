@@ -2,12 +2,12 @@ import { FC } from "react";
 
 import Layout from "../../components/layout";
 
-const Home: FC = () => {
+const Requests: FC = () => {
   return (
     <Layout>
-      <>Home</>
+      <>Requests</>
     </Layout>
   );
 };
 
-export default Home;
+export default Requests;

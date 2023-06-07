@@ -3,7 +3,7 @@ import { useEffect, RefObject } from "react";
 const useCloseOnOutsideClick = (
   ref: RefObject<HTMLDivElement>,
   func: Function
-) => {
+): void => {
   useEffect(() => {
     const el = ({ target }: MouseEvent): void => {
       const eventTarget = target as Node;
