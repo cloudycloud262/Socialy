@@ -6,6 +6,7 @@ import Explore from "./pages/explore";
 import Requests from "./pages/requests";
 import Notifications from "./pages/notifications";
 import Chats from "./pages/chats";
+import Account from "./pages/account";
 import Header from "./components/header";
 import BottomNav from "./components/header/bottomNav";
 import Signup from "./pages/signup";
@@ -24,6 +25,7 @@ const App: FC = () => {
         <Route path="/requests" element={<Requests />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/chats" element={<Chats />} />
+        <Route path="/account" element={<Account />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<PageNotFound />} />

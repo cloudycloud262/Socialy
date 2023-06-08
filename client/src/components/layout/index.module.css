@@ -1,50 +1,40 @@
 .wrapper {
   display: flex;
   flex-grow: 1;
-  gap: 1.5px;
-  padding: 0.6rem;
-  gap: 0.5rem;
-}
-.card {
-  padding: 1rem;
-  background-color: white;
-  border: 1px solid gainsboro;
-  border-radius: 0.15rem;
+  background-color: gainsboro;
+  gap: 1px;
 }
 .left,
 .right,
 .center {
   flex-basis: 0;
+  background-color: white;
 }
 .left,
 .right {
   flex-grow: 0.7;
   min-width: 300px;
 }
+.postForm {
+  padding: 1rem;
+}
 .center {
   flex-grow: 1;
 }
-.center > .createPost {
+.center > .postForm {
   display: none;
 }
 
-@media (width<1000px) {
+@media (width<900px) {
   .right {
     display: none;
   }
 }
-@media (width<700px) {
-  .wrapper {
-    padding: 0;
-  }
-  .card {
-    border: none;
-    border-radius: 0rem;
-  }
+@media (width<600px) {
   .left {
     display: none;
   }
-  .center > .createPost {
+  .center > .postForm {
     display: flex;
   }
 }

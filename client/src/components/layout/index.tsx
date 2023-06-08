@@ -14,7 +14,7 @@ const Layout: FC<LayoutProps> = (props) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.left}>
-        <form className={styles.card}>
+        <form className={styles.postForm}>
           <label id="create-post" className="filled-input">
             <Textarea
               value={postBody}
@@ -31,8 +31,8 @@ const Layout: FC<LayoutProps> = (props) => {
           </button>
         </form>
       </div>
-      <div className={`${styles.center} ${styles.card}`}>
-        <form className={styles.createPost}>
+      <div className={`${styles.center}`}>
+        <form className={styles.postForm}>
           <label id="create-post" className="filled-input">
             <Textarea
               value={postBody}
@@ -49,7 +49,7 @@ const Layout: FC<LayoutProps> = (props) => {
         <div>{props.children}</div>
       </div>
       <div className={styles.right}>
-        <div className={styles.card}>Notifications</div>
+        <div>Notifications</div>
       </div>
     </div>
   );
