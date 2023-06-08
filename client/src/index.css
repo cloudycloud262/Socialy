@@ -203,6 +203,7 @@ button,
   flex-direction: column;
   background-color: gainsboro;
   gap: 1px;
+  overflow: auto;
 }
 .list {
   display: flex;
@@ -256,4 +257,27 @@ button,
 }
 .chat-area > .material-icons-outlined {
   cursor: pointer;
+}
+
+.tab {
+  display: flex;
+  gap: 1px;
+  border-bottom: 1px solid gainsboro;
+}
+.tab-item {
+  background-color: white;
+  padding: 0.5rem 0;
+  flex-grow: 1;
+  flex-basis: 0;
+  text-align: center;
+  box-sizing: border-box;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.tab-item:hover:not(.active-tab) {
+  box-shadow: inset 0px 0px 4px 1px #62a6fe;
+}
+.active-tab {
+  background-color: #62a6fe;
+  color: white;
 }
