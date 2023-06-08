@@ -7,17 +7,23 @@ import styles from "./index.module.css";
 const Chats: FC = () => {
   const [messageBody, setMessageBody] = useState("");
   const [showChatRoom, setShowChatRoom] = useState(false);
+  const [activeChat, setActiveChat] = useState(-1);
 
   return (
     <div className={styles.wrapper}>
-      <div className={`list-wrapper ${styles.list}`}>
+      <div className={`list ${styles.list}`}>
         <span className="list-header fs-medium fw-medium">Chats</span>
         <div className="list">
           {[...Array(30)].map((_d, index) => (
             <div
-              className="user-item user-item-hover"
+              className={`user-card user-card-hover ${
+                activeChat === index ? "user-card-active" : ""
+              }`}
               key={index}
-              onClick={() => setShowChatRoom(true)}
+              onClick={() => {
+                setActiveChat(index);
+                setShowChatRoom(true);
+              }}
             >
               <img src="/placeholderDp.png" alt="" className="dp-icon" />
               <span className="fs-medium fw-medium">Username</span>
@@ -28,9 +34,11 @@ const Chats: FC = () => {
       <div
         className={`${styles.room} ${showChatRoom ? styles.roomActive : ""}`}
       >
-        <div className={`user-item ${styles.roomHeader}`}>
+        <div className={`user-card ${styles.roomHeader}`}>
           <img src="/placeholderDp.png" alt="" className="dp-icon" />
-          <span className="fs-medium fw-medium">Username</span>
+          <span className="fs-medium fw-medium">
+            Usernamefsdfdsfsfdsfuisdhsdifhsdifhsdiufhdsiufhsi
+          </span>
           <span
             className="material-icons-outlined"
             onClick={() => setShowChatRoom(false)}
@@ -44,7 +52,7 @@ const Chats: FC = () => {
               className={`${styles.receivedBubble} ${styles.bubble} fw-medium fs-medium`}
               key={index}
             >
-              sdfodshuisdhfisdhfdifhdiuhfdsuiahdsafgsduaygdasufdas7ftdbsf67tdas7fdasfydtsavdsytfdtsyftd
+              Hello
             </div>
           ))}
           <div

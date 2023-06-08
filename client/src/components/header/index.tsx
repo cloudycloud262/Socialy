@@ -8,6 +8,7 @@ import styles from "./index.module.css";
 
 const Header: FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [showAccMenu, setShowAccMenu] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<HTMLInputElement>(null);
@@ -21,27 +22,49 @@ const Header: FC = () => {
         <img src="/vite.svg" alt="" />
         <span>Socialy</span>
       </div>
-      <label
-        htmlFor="search"
-        className={`filled-input ${styles.search} ${
+      <div
+        className={`${styles.searchWrapper} ${
           showSearchBar ? styles.activeSearch : ""
         }`}
       >
-        <span className="material-icons-outlined">search</span>
-        <input
-          type="text"
-          id="search"
-          placeholder="Search Account"
-          ref={searchFieldRef}
-          onBlur={() => setShowSearchBar(false)}
-        />
-        <span
-          className="material-icons-outlined"
-          onClick={() => setShowSearchBar(false)}
-        >
-          close
-        </span>
-      </label>
+        <label htmlFor="search" className={`filled-input ${styles.search}`}>
+          <span className="material-icons-outlined">search</span>
+          <input
+            type="text"
+            id="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search Account"
+            ref={searchFieldRef}
+            onBlur={() => {
+              setShowSearchBar(false);
+            }}
+          />
+          <span
+            className="material-icons-outlined"
+            onClick={() => setShowSearchBar(false)}
+          >
+            close
+          </span>
+        </label>
+        {searchTerm ? (
+          <div className={`${styles.searchMenu} list`}>
+            {[...Array(40)].map((_d, index) => (
+              <div
+                className="user-card user-card-hover"
+                key={index}
+                onClick={() => {
+                  navigate(`/account/${index}`);
+                  setSearchTerm("");
+                }}
+              >
+                <img src="/placeholderDp.png" alt="" className="dp-icon" />
+                <span className="fw-medium fs-small">Username</span>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
       <span
         className={`material-icons-outlined ${styles.searchIcon}`}
         onClick={() => {

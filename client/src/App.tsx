@@ -26,6 +26,7 @@ const App: FC = () => {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/chats" element={<Chats />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/account/:id" element={<Account />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<PageNotFound />} />

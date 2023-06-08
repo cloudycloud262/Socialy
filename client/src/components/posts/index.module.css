@@ -1,0 +1,30 @@
+.postWrapper {
+  display: flex;
+  background-color: white;
+  gap: 0.5rem;
+  padding: 0.6rem;
+}
+.postBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.postHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+.engagement {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.2rem;
+}
+.engagement > div {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.engagement > div > :global(.material-icons-outlined) {
+  font-size: 1.3rem;
+}

@@ -47,6 +47,7 @@ button,
   outline: none;
   border-radius: 0.15rem;
   justify-content: center;
+  cursor: pointer;
 }
 .btn {
   text-align: center;
@@ -198,13 +199,6 @@ button,
   font-size: 1.35rem;
 }
 
-.list-wrapper {
-  display: flex;
-  flex-direction: column;
-  background-color: gainsboro;
-  gap: 1px;
-  overflow: auto;
-}
 .list {
   display: flex;
   flex-direction: column;
@@ -226,23 +220,37 @@ button,
   color: grey;
 }
 
-.user-item {
+.user-card {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   background-color: white;
   padding: 0.6rem;
   transition: 0.15s box-shadow;
+  cursor: default;
 }
-.user-item > span:nth-of-type(1) {
+.user-card-active {
+  background-color: #62a6fe;
+  color: white;
+}
+.user-card > span:nth-of-type(1) {
   margin-right: auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-.user-item-hover:hover {
-  box-shadow: inset 0px 0px 4px 1px #62a6fe;
-}
-.user-item > .material-icons-outlined {
+.user-card > .material-icons-outlined {
   font-size: 1.3rem;
   color: grey;
+}
+.user-card > .btn-grp {
+  display: flex;
+  flex-direction: column;
+}
+.user-card button {
+  padding: 0.1rem 0.6rem;
+}
+.user-card-hover:hover:not(.user-card-active) {
+  box-shadow: inset 0px 0px 4px 1px #62a6fe;
 }
 
 .chat-area {

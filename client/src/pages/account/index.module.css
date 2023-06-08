@@ -4,6 +4,7 @@
   flex-grow: 1;
   background-color: gainsboro;
   position: relative;
+  overflow: auto;
 }
 .profile {
   flex-grow: 0.5;

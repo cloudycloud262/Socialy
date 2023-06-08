@@ -18,10 +18,9 @@
   flex-direction: column;
   gap: 2px;
   flex-grow: 1;
-  height: 100%;
-  box-sizing: border-box;
   flex-basis: 0;
   background-color: gainsboro;
+  overflow: auto;
 }
 .roomHeader > :global(.material-icons-outlined) {
   display: none;
@@ -69,6 +68,9 @@
     transform: scaleY(0);
     transform-origin: bottom;
     transition: 0.2s;
+    height: 100%;
+    box-sizing: border-box;
+    width: 100%;
   }
   .roomActive {
     transform: scaleY(1);

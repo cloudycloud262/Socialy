@@ -1,4 +1,7 @@
 import { FC, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import Posts from "../../components/posts";
 
 import styles from "./index.module.css";
 
@@ -6,6 +9,7 @@ const Account: FC = () => {
   const [showPosts, setShowPosts] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [nav, setNav] = useState("Posts");
+  const { id } = useParams();
 
   return (
     <div className={styles.wrapper}>
@@ -14,7 +18,12 @@ const Account: FC = () => {
           <img src="/placeholderCover.jpg" alt="" className={styles.cover} />
           <img src="/placeholderDp.png" alt="" className={styles.dp} />
           <div className={`btn-grp ${styles.profileActionBtn}`}>
-            {showEditForm ? (
+            {id ? (
+              <div className="btn-grp">
+                <button className="outlined-btn">Chat</button>
+                <button className="contained-btn">Follow</button>
+              </div>
+            ) : showEditForm ? (
               <button
                 className="outlined-btn icon-btn danger-btn"
                 onClick={() => setShowEditForm(false)}
@@ -87,7 +96,7 @@ const Account: FC = () => {
       <div
         className={`${styles.posts} ${
           showPosts ? styles.postsActive : ""
-        } list-wrapper`}
+        } list`}
       >
         <div className="list-header">
           <span className="fs-medium fw-medium">{nav}</span>
@@ -98,7 +107,25 @@ const Account: FC = () => {
             close
           </span>
         </div>
-        <div className="list"></div>
+        <div className="list">
+          {nav === "Followers" ? (
+            [...Array(30)].map((_d, index) => (
+              <div className="user-card" key={index}>
+                <img src="/placeholderDp.png" alt="" className="dp-icon" />
+                <span className="fw-medium fs-medium">Username</span>
+              </div>
+            ))
+          ) : nav === "Following" ? (
+            [...Array(30)].map((_d, index) => (
+              <div className="user-card" key={index}>
+                <img src="/placeholderDp.png" alt="" className="dp-icon" />
+                <span className="fw-medium fs-medium">Username</span>
+              </div>
+            ))
+          ) : nav === "Posts" ? (
+            <Posts />
+          ) : null}
+        </div>
       </div>
     </div>
   );

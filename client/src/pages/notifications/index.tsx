@@ -5,11 +5,11 @@ import Layout from "../../components/layout";
 const Notifications: FC = () => {
   return (
     <Layout>
-      <div className="list-wrapper">
+      <div className="list">
         <span className="list-header fs-medium fw-medium">Notifications</span>
         <div className="list">
           {[...Array(70)].map((_d, index) => (
-            <div className="user-item" key={index}>
+            <div className="user-card" key={index}>
               <img src="/placeholderDp.png" alt="" className="dp-icon" />
               <span className="fs-small fw-medium">
                 Username started following you with 100 others people. Are we

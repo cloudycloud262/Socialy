@@ -10,18 +10,31 @@
   z-index: 1;
 }
 
-.search {
+.searchWrapper {
   flex-grow: 1;
   z-index: 1;
   max-width: 380px;
   box-sizing: border-box;
   margin: 0 auto;
+  position: relative;
+}
+.search {
+  margin: 0.3rem 0;
 }
 .searchIcon {
   display: none;
 }
 .search > span:nth-of-type(2) {
   display: none;
+}
+.searchMenu {
+  position: absolute;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid gainsboro;
+  overflow: auto;
+  height: min(400px, 70vh);
+  border-radius: 0.2rem;
 }
 
 .navbar {
@@ -72,14 +85,14 @@
 }
 
 @media (width<550px) {
-  label.search {
+  .searchWrapper {
     transition: 0.2s;
     transform: scaleX(0);
     position: absolute;
     width: calc(100% - 2rem);
     max-width: 550px;
   }
-  label.activeSearch {
+  .activeSearch {
     transform: scaleX(1);
   }
   .search > span:nth-of-type(2) {

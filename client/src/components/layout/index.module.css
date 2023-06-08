@@ -27,6 +27,19 @@
 }
 .center > .postForm {
   display: none;
+  border-bottom: 1px solid gainsboro;
+}
+.nfLink {
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  background-color: white;
+  padding: 0.5rem 0;
+}
+.nfLink > :global(.material-icons-outlined) {
+  font-size: 1.15rem;
 }
 
 @media (width<900px) {
@@ -40,5 +53,8 @@
   }
   .center > .postForm {
     display: flex;
+  }
+  .center > :global(.list) {
+    overflow: visible;
   }
 }
