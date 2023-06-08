@@ -63,7 +63,7 @@ const Header: FC = () => {
         </div>
         <div className={`menu ${showAccMenu ? "menu-active " : ""}`}>
           <button
-            className="menu-item transparent-btn icon-btn"
+            className="menu-item transparent-btn icon-btn disabled-text"
             onClick={() => {
               navigate("/account");
               setShowAccMenu(false);

@@ -46,7 +46,7 @@ const Layout: FC<LayoutProps> = (props) => {
             <span className="fs-small fw-medium">Create</span>
           </button>
         </form>
-        <div>{props.children}</div>
+        {props.children}
       </div>
       <div className={styles.right}>
         <div>Notifications</div>

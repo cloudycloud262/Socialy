@@ -1,23 +1,22 @@
 import { FC } from "react";
-import { useState } from "react";
-
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import styles from "./index.module.css";
 
 const Navbar: FC = () => {
-  const [active, setActive] = useState("");
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   return (
     <div className={styles.navbar}>
       <Link
         to="/"
         className={`${styles.navItem} ${
-          active === "home" ? styles.activeNavItem : ""
+          pathname === "/" ? styles.activeNavItem : ""
         }`}
-        onClick={() => setActive("home")}
+        onClick={() => navigate("/")}
       >
-        {active === "home" ? (
+        {pathname === "/" ? (
           <span className="material-icons">home</span>
         ) : (
           <span className="material-icons-outlined">home</span>
@@ -26,11 +25,11 @@ const Navbar: FC = () => {
       <Link
         to="/explore"
         className={`${styles.navItem} ${
-          active === "explore" ? styles.activeNavItem : ""
+          pathname === "/explore" ? styles.activeNavItem : ""
         }`}
-        onClick={() => setActive("explore")}
+        onClick={() => navigate("/explore")}
       >
-        {active === "explore" ? (
+        {pathname === "/explore" ? (
           <span className="material-icons">explore</span>
         ) : (
           <span className="material-icons-outlined">explore</span>
@@ -39,11 +38,11 @@ const Navbar: FC = () => {
       <Link
         to="/requests"
         className={`${styles.navItem} ${
-          active === "requests" ? styles.activeNavItem : ""
+          pathname === "/requests" ? styles.activeNavItem : ""
         }`}
-        onClick={() => setActive("requests")}
+        onClick={() => navigate("/requests")}
       >
-        {active === "requests" ? (
+        {pathname === "/requests" ? (
           <span className="material-icons">person_add</span>
         ) : (
           <span className="material-icons-outlined">person_add</span>
@@ -52,11 +51,11 @@ const Navbar: FC = () => {
       <Link
         to="/notifications"
         className={`${styles.navItem} ${
-          active === "notifications" ? styles.activeNavItem : ""
+          pathname === "/notifications" ? styles.activeNavItem : ""
         }`}
-        onClick={() => setActive("notifications")}
+        onClick={() => navigate("/notifications")}
       >
-        {active === "notifications" ? (
+        {pathname === "/notifications" ? (
           <span className="material-icons">notifications</span>
         ) : (
           <span className="material-icons-outlined">notifications</span>
@@ -65,11 +64,11 @@ const Navbar: FC = () => {
       <Link
         to="/chats"
         className={`${styles.navItem} ${
-          active === "chats" ? styles.activeNavItem : ""
+          pathname === "/chats" ? styles.activeNavItem : ""
         }`}
-        onClick={() => setActive("chats")}
+        onClick={() => navigate("/chats")}
       >
-        {active === "chats" ? (
+        {pathname === "/chats" ? (
           <span className="material-icons">chat</span>
         ) : (
           <span className="material-icons-outlined">chat</span>
