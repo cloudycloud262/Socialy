@@ -7,6 +7,7 @@ import Requests from "./pages/requests";
 import Notifications from "./pages/notifications";
 import Chats from "./pages/chats";
 import Account from "./pages/account";
+import Comments from "./components/comments";
 import Header from "./components/header";
 import BottomNav from "./components/header/bottomNav";
 import Signup from "./pages/signup";
@@ -27,6 +28,7 @@ const App: FC = () => {
         <Route path="/chats" element={<Chats />} />
         <Route path="/account" element={<Account />} />
         <Route path="/account/:id" element={<Account />} />
+        <Route path="/post/:id" element={<Comments />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<PageNotFound />} />

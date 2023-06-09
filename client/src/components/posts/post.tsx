@@ -1,8 +1,11 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./index.module.css";
 
 const Post: FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.postWrapper}>
       <img src="/placeholderDp.png" alt="" className="dp-icon" />
@@ -27,7 +30,7 @@ const Post: FC = () => {
             <span className="material-icons-outlined">star_border</span>
             <span>80</span>
           </div>
-          <div>
+          <div onClick={() => navigate(`/post/id`)}>
             <span className="material-icons-outlined">rate_review</span>
             <span>150</span>
           </div>
