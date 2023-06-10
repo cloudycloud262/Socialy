@@ -33,7 +33,7 @@ export const signupValidator = (args: Signup): Signup => {
   if (!args.username) {
     res.username = "Please enter a Username";
   } else if (!isAlphaNumeric(args.username)) {
-    res.username = "Please enter a Valid Username";
+    res.username = "Username can only contains alphabets and numbers";
   } else if (args.username.length < 6) {
     res.username = "Username should be more than 6 characters";
   } else if (args.username.length > 20) {
