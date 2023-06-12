@@ -62,6 +62,9 @@
   transform: scaleY(0);
   transform-origin: top;
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 .editProfileActive {
   transform: scaleY(1);

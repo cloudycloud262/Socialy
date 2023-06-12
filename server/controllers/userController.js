@@ -25,7 +25,10 @@ const handleErrors = (err) => {
       errors.username = "Username is already registered";
   }
   // validation errors
-  if (err.message.includes("user validation failed")) {
+  if (
+    err.message.includes("user validation failed") ||
+    err.message.includes("Validation failed")
+  ) {
     Object.values(err.errors).forEach(({ properties }) => {
       errors[properties.path] = properties.message;
     });
@@ -100,5 +103,23 @@ export const getCurrentUser = async (req, res) => {
     }
   } catch (e) {
     res.status(400).json(e);
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  const body = req.body;
+  const token = req.cookies.jwt;
+
+  try {
+    const userId = await decodeJWT(token);
+    const user = await User.findByIdAndUpdate(userId, body, {
+      runValidators: true,
+      new: true,
+    });
+    res.status(200).json(user._id);
+  } catch (e) {
+    console.log(e);
+    const errors = handleErrors(e);
+    res.status(400).json(errors);
   }
 };

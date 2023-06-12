@@ -1,7 +1,7 @@
 import { useRef, useState, FC } from "react";
 import useCloseOnOutsideClick from "../../hooks/useCloseOnOutsideClick";
 import { useNavigate } from "react-router-dom";
-import { useLogoutMutation } from "../../store/authApi";
+import { useGetCurrentUserQuery, useLogoutMutation } from "../../store/authApi";
 
 import Navbar from "./navbar";
 import Loading from "../loading";
@@ -16,6 +16,7 @@ const Header: FC = () => {
   const searchFieldRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  const currentUser = useGetCurrentUserQuery();
   const [logout, logoutStatus] = useLogoutMutation();
 
   useCloseOnOutsideClick(accountMenuRef, () => setShowAccMenu(false));
@@ -86,7 +87,9 @@ const Header: FC = () => {
             onClick={() => setShowAccMenu((prev) => !prev)}
           >
             <img src="/placeholderDp.png" alt="" className="dp-icon" />
-            <span className="fs-medium fw-medium">Chrome</span>
+            <span className="fs-medium fw-medium">
+              {currentUser.data?.username}
+            </span>
             <span className="material-icons-outlined">arrow_drop_down</span>
           </div>
           <div className={`menu ${showAccMenu ? "menu-active " : ""}`}>

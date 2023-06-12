@@ -23,6 +23,10 @@ form {
   gap: 0.7rem;
   align-self: stretch;
 }
+form > div {
+  display: flex;
+  flex-direction: column;
+}
 
 input,
 textarea,

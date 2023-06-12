@@ -15,6 +15,10 @@ interface User {
   updatedAt: string;
   __v: 0;
 }
+interface UpdateArgs {
+  email: string;
+  username: string;
+}
 
 export const authApi = createApi({
   reducerPath: "auth",
@@ -25,7 +29,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     getCurrentUser: builder.query<User, void>({
       query: () => ({
-        url: "/currentuser",
+        url: "/getcurrentuser",
         credentials: "include",
       }),
       providesTags: ["CurrentUser"],
@@ -55,6 +59,15 @@ export const authApi = createApi({
       }),
       invalidatesTags: (res) => (res ? ["CurrentUser"] : []),
     }),
+    updateProfile: builder.mutation<string, UpdateArgs>({
+      query: (body) => ({
+        url: "/update",
+        body,
+        credentials: "include",
+        method: "PATCH",
+      }),
+      invalidatesTags: (res) => (res ? ["CurrentUser"] : []),
+    }),
   }),
 });
 
@@ -63,4 +76,5 @@ export const {
   useSignupMutation,
   useLoginMutation,
   useLogoutMutation,
+  useUpdateProfileMutation,
 } = authApi;

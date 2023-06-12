@@ -21,8 +21,8 @@ const Signup: FC = () => {
   const [signup, status] = useSignupMutation();
 
   useEffect(() => {
-    if (status.isError && "data" in status.error && status.error.data) {
-      setErrors({ ...errors, ...status.error.data });
+    if (status.isError && "data" in status.error) {
+      setErrors({ ...errors, ...(status.error.data as {}) });
     }
   }, [status.isError]);
 
