@@ -1,6 +1,9 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { signupValidator } from "../../utils/validators";
+import { useSignupMutation } from "../../store/authApi";
+
+import Loading from "../../components/loading";
 
 import styles from "./index.module.css";
 
@@ -15,8 +18,17 @@ const Signup: FC = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
+  const [signup, status] = useSignupMutation();
+
+  useEffect(() => {
+    if (status.isError && "data" in status.error && status.error.data) {
+      setErrors({ ...errors, ...status.error.data });
+    }
+  }, [status.isError]);
+
   return (
     <div className={styles.bg}>
+      {status.isLoading ? <Loading /> : null}
       <div className={styles.wrapper}>
         <div className="logo">
           <img src="/vite.svg" alt="" />
@@ -31,7 +43,7 @@ const Signup: FC = () => {
             const err = signupValidator({ email, username, password });
             setErrors(err);
             if (!err.email && !err.username && !err.password) {
-              // Send Signup Request
+              signup({ email, username, password });
             }
           }}
         >

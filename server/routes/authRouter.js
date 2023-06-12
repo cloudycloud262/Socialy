@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  currentUser,
+  getCurrentUser,
   login,
   logout,
   signup,
@@ -8,7 +8,7 @@ import {
 
 const userRouter = Router();
 
-userRouter.get("/currentuser", currentUser);
+userRouter.get("/getCurrentUser", getCurrentUser);
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
 userRouter.get("/logout", logout);
