@@ -1,7 +1,8 @@
-import { useRef, useState, FC } from "react";
+import { useRef, useState, FC, useEffect } from "react";
 import useCloseOnOutsideClick from "../../hooks/useCloseOnOutsideClick";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUserQuery, useLogoutMutation } from "../../store/authApi";
+import { useGetUsersQuery } from "../../store/userApi";
 
 import Navbar from "./navbar";
 import Loading from "../loading";
@@ -10,15 +11,30 @@ import styles from "./index.module.css";
 
 const Header: FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState({ term: "", debounced: "" });
   const [showAccMenu, setShowAccMenu] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const currentUser = useGetCurrentUserQuery();
+  const getUsers = useGetUsersQuery(
+    {
+      type: "search",
+      username: searchTerm.debounced,
+    },
+    { skip: !searchTerm.debounced }
+  );
   const [logout, logoutStatus] = useLogoutMutation();
 
+  useEffect(() => {
+    const to = setTimeout(() => {
+      setSearchTerm((prev) => ({ ...prev, debounced: prev.term }));
+    }, 500);
+    return () => {
+      clearTimeout(to);
+    };
+  }, [searchTerm.term]);
   useCloseOnOutsideClick(accountMenuRef, () => setShowAccMenu(false));
 
   return (
@@ -38,10 +54,15 @@ const Header: FC = () => {
             <input
               type="text"
               id="search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm.term}
+              onChange={(e) =>
+                setSearchTerm((prev) => ({ ...prev, term: e.target.value }))
+              }
               placeholder="Search Account"
               ref={searchFieldRef}
+              onFocus={() => {
+                setShowSearchBar(true);
+              }}
               onBlur={() => {
                 setShowSearchBar(false);
               }}
@@ -53,19 +74,29 @@ const Header: FC = () => {
               close
             </span>
           </label>
-          {searchTerm ? (
+          {searchTerm && showSearchBar ? (
             <div className={`${styles.searchMenu} list`}>
-              {[...Array(40)].map((_d, index) => (
+              {getUsers.isLoading || getUsers.isFetching ? (
+                <div className={styles.searchLoading}>
+                  <Loading />
+                </div>
+              ) : null}
+              {getUsers.currentData?.length === 0 ? (
+                <div className={`fs-medium fw-medium ${styles.searchEmpty}`}>
+                  No Results Found
+                </div>
+              ) : null}
+              {getUsers.currentData?.map((user, index) => (
                 <div
                   className="user-card user-card-hover"
                   key={index}
                   onClick={() => {
-                    navigate(`/account/${index}`);
-                    setSearchTerm("");
+                    navigate(`/account/${user._id}`);
+                    setSearchTerm((prev) => ({ ...prev, term: "" }));
                   }}
                 >
                   <img src="/placeholderDp.png" alt="" className="dp-icon" />
-                  <span className="fw-medium fs-small">Username</span>
+                  <span className="fw-medium fs-small">{user.username}</span>
                 </div>
               ))}
             </div>

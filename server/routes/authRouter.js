@@ -6,15 +6,15 @@ import {
   logout,
   signup,
   updateProfile,
-} from "../controllers/userController.js";
+} from "../controllers/authController.js";
 
-const userRouter = Router();
+const authRouter = Router();
 
-userRouter.get("/getCurrentUser", getCurrentUser);
-userRouter.post("/signup", signup);
-userRouter.post("/login", login);
-userRouter.get("/logout", logout);
-userRouter.patch("/update", updateProfile);
-userRouter.delete("/delete", deleteAccount);
+authRouter.get("/getCurrentUser", getCurrentUser);
+authRouter.post("/signup", signup);
+authRouter.post("/login", login);
+authRouter.get("/logout", logout);
+authRouter.patch("/update", updateProfile);
+authRouter.delete("/delete", deleteAccount);
 
-export default userRouter;
+export default authRouter;

@@ -33,8 +33,17 @@
   box-sizing: border-box;
   border: 2px solid gainsboro;
   overflow: auto;
-  height: min(400px, 70vh);
+  max-height: min(400px, 70vh);
   border-radius: 0.2rem;
+}
+.searchLoading {
+  padding: 4rem 0;
+  background-color: white;
+}
+.searchEmpty {
+  background-color: white;
+  padding: 1rem;
+  text-align: center;
 }
 
 .navbar {
