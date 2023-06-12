@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deleteAccount,
   getCurrentUser,
   login,
   logout,
@@ -14,5 +15,6 @@ userRouter.post("/signup", signup);
 userRouter.post("/login", login);
 userRouter.get("/logout", logout);
 userRouter.patch("/update", updateProfile);
+userRouter.delete("/delete", deleteAccount);
 
 export default userRouter;

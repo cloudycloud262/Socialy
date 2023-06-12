@@ -1,5 +1,6 @@
 import { FC, FormEvent, useState, useEffect } from "react";
 import {
+  useDeleteAccountMutation,
   useGetCurrentUserQuery,
   useUpdateProfileMutation,
 } from "../../store/authApi";
@@ -13,14 +14,16 @@ type EditProfileProps = {
 const EditProfile: FC<EditProfileProps> = (props) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [currPassword, setCurrPassword] = useState("");
   const [errors, setErrors] = useState({
     email: "",
     username: "",
+    currPassword: "",
   });
 
   const currentUser = useGetCurrentUserQuery();
   const [updateProfile, updateStatus] = useUpdateProfileMutation();
-
+  const [deleteAccount, deleteStatus] = useDeleteAccountMutation();
   useEffect(() => {
     if (currentUser.isSuccess) {
       setEmail(currentUser.data.email);
@@ -32,10 +35,19 @@ const EditProfile: FC<EditProfileProps> = (props) => {
       setErrors({ ...errors, ...(updateStatus.error.data as {}) });
     }
   }, [updateStatus.isError]);
+  useEffect(() => {
+    if (deleteStatus.isError && "data" in deleteStatus.error) {
+      setErrors({ ...errors, ...(deleteStatus.error.data as {}) });
+    }
+  }, [deleteStatus.isError]);
 
   const updateProfileHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updateProfile({ email, username });
+  };
+  const deleteAccountHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    deleteAccount(currPassword);
   };
 
   return (
@@ -77,15 +89,26 @@ const EditProfile: FC<EditProfileProps> = (props) => {
           <span className="fs-small fw-medium">Update</span>
         </button>
       </form>
-      <form>
+      <form onSubmit={deleteAccountHandler}>
         <span className="fs-small fw-medium">
           To delete this account, enter the current password
         </span>
-        <input
-          type="text"
-          className="filled-input"
-          placeholder="Current Password"
-        />
+        <div>
+          <input
+            type="text"
+            className="filled-input"
+            placeholder="Current Password"
+            value={currPassword}
+            onChange={(e) => {
+              setCurrPassword(e.target.value);
+              errors.currPassword &&
+                setErrors((prev) => ({ ...prev, currPassword: "" }));
+            }}
+          />
+          <span className="fs-small fw-medium error">
+            {errors.currPassword}
+          </span>
+        </div>
         <button className="outlined-btn danger-btn icon-btn">
           <span className="material-icons-outlined">delete</span>
           <span className="fs-small fw-medium">Delete</span>

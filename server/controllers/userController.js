@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 // handle errors
 const handleErrors = (err) => {
@@ -121,5 +122,25 @@ export const updateProfile = async (req, res) => {
     console.log(e);
     const errors = handleErrors(e);
     res.status(400).json(errors);
+  }
+};
+
+export const deleteAccount = async (req, res) => {
+  const token = req.cookies.jwt;
+  const { currPassword } = req.body;
+
+  try {
+    const userId = await decodeJWT(token);
+    const user = await User.findById(userId);
+    const bool = await bcrypt.compare(currPassword, user.password);
+    if (bool) {
+      await User.findByIdAndDelete(userId);
+      res.status(200).json(user);
+    } else {
+      res.status(400).json({ currPassword: "Incorrect Password" });
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(400).json(e);
   }
 };
