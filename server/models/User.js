@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a password"],
       minlength: [6, "Minimum password length is 6 characters"],
     },
+    followers: { type: Array, default: [] },
+    following: { type: Array, default: [] },
+    followersCount: { type: Number, default: 0 },
+    followingCount: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

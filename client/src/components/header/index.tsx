@@ -15,12 +15,14 @@ const Header: FC = () => {
   const [showAccMenu, setShowAccMenu] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const searchFieldRef = useRef<HTMLInputElement>(null);
+  const searchWrapperRef = useRef<HTMLDivElement>(null);
+  const searchButtonRef = useRef<HTMLSpanElement>(null);
   const navigate = useNavigate();
 
   const currentUser = useGetCurrentUserQuery();
   const getUsers = useGetUsersQuery(
     {
-      type: "search",
+      type: "Search",
       username: searchTerm.debounced,
     },
     { skip: !searchTerm.debounced }
@@ -36,6 +38,11 @@ const Header: FC = () => {
     };
   }, [searchTerm.term]);
   useCloseOnOutsideClick(accountMenuRef, () => setShowAccMenu(false));
+  useCloseOnOutsideClick(searchWrapperRef, (target: HTMLElement) => {
+    if (!searchButtonRef.current?.contains(target)) {
+      setShowSearchBar(false);
+    }
+  });
 
   return (
     <>
@@ -48,6 +55,7 @@ const Header: FC = () => {
           className={`${styles.searchWrapper} ${
             showSearchBar ? styles.activeSearch : ""
           }`}
+          ref={searchWrapperRef}
         >
           <label htmlFor="search" className={`filled-input ${styles.search}`}>
             <span className="material-icons-outlined">search</span>
@@ -60,16 +68,14 @@ const Header: FC = () => {
               }
               placeholder="Search Account"
               ref={searchFieldRef}
-              onFocus={() => {
-                setShowSearchBar(true);
-              }}
-              onBlur={() => {
-                setShowSearchBar(false);
-              }}
+              onFocus={() => setShowSearchBar(true)}
             />
             <span
               className="material-icons-outlined"
-              onClick={() => setShowSearchBar(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                setShowSearchBar(false);
+              }}
             >
               close
             </span>
@@ -91,8 +97,11 @@ const Header: FC = () => {
                   className="user-card user-card-hover"
                   key={index}
                   onClick={() => {
-                    navigate(`/account/${user._id}`);
+                    user._id === currentUser.data?._id
+                      ? navigate(`/account`)
+                      : navigate(`/user/${user._id}`);
                     setSearchTerm((prev) => ({ ...prev, term: "" }));
+                    setShowSearchBar(false);
                   }}
                 >
                   <img src="/placeholderDp.png" alt="" className="dp-icon" />
@@ -108,6 +117,7 @@ const Header: FC = () => {
             searchFieldRef.current?.focus();
             setShowSearchBar(true);
           }}
+          ref={searchButtonRef}
         >
           search
         </span>

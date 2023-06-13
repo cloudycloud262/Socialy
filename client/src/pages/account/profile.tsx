@@ -1,6 +1,11 @@
 import { FC, Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import { useGetCurrentUserQuery } from "../../store/authApi";
+import {
+  useFollowMutation,
+  useGetUserQuery,
+  useUnfollowMutation,
+} from "../../store/userApi";
 
 import styles from "./index.module.css";
 
@@ -14,7 +19,9 @@ type ProfileProps = {
 const Profile: FC<ProfileProps> = (props) => {
   const { id } = useParams();
 
-  const currentUser = useGetCurrentUserQuery();
+  const getUser = id ? useGetUserQuery(id) : useGetCurrentUserQuery();
+  const [follow] = useFollowMutation();
+  const [unfollow] = useUnfollowMutation();
 
   return (
     <>
@@ -25,7 +32,17 @@ const Profile: FC<ProfileProps> = (props) => {
           {id ? (
             <div className="btn-grp">
               <button className="outlined-btn">Chat</button>
-              <button className="contained-btn">Follow</button>
+              {getUser.data &&
+              "isFollowing" in getUser.data &&
+              getUser.data.isFollowing ? (
+                <button className="contained-btn" onClick={() => unfollow(id)}>
+                  Unfollow
+                </button>
+              ) : (
+                <button className="contained-btn" onClick={() => follow(id)}>
+                  Follow
+                </button>
+              )}
             </div>
           ) : props.showEditForm ? (
             <button
@@ -46,7 +63,7 @@ const Profile: FC<ProfileProps> = (props) => {
           )}
         </div>
       </div>
-      <div className="fw-medium fs-medium">{currentUser.data?.username}</div>
+      <div className="fw-medium fs-medium">{getUser.data?.username}</div>
       <div className={styles.connections}>
         <button
           onClick={() => {
@@ -54,7 +71,9 @@ const Profile: FC<ProfileProps> = (props) => {
             props.setNav("Followers");
           }}
         >
-          <span className="fs-medium fw-medium">200</span>
+          <span className="fs-medium fw-medium">
+            {getUser.data?.followersCount}
+          </span>
           <span className="fs-small fw-thin">Followers</span>
         </button>
         <button
@@ -63,7 +82,9 @@ const Profile: FC<ProfileProps> = (props) => {
             props.setNav("Following");
           }}
         >
-          <span className="fs-medium fw-medium">150</span>
+          <span className="fs-medium fw-medium">
+            {getUser.data?.followingCount}
+          </span>
           <span className="fs-small fw-thin">Following</span>
         </button>
         <button

@@ -5,6 +5,8 @@ import {
   useUpdateProfileMutation,
 } from "../../store/authApi";
 
+import Loading from "../../components/loading";
+
 import styles from "./index.module.css";
 
 type EditProfileProps = {
@@ -57,6 +59,7 @@ const EditProfile: FC<EditProfileProps> = (props) => {
       }`}
     >
       <form onSubmit={updateProfileHandler}>
+        {updateStatus.isLoading ? <Loading /> : null}
         <div>
           <input
             type="text"

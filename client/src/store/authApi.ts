@@ -11,6 +11,8 @@ interface User {
   _id: string;
   email: string;
   username: string;
+  followersCount: number;
+  followingCount: number;
   createdAt: string;
   updatedAt: string;
   __v: 0;

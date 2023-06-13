@@ -6,14 +6,14 @@ const useCloseOnOutsideClick = (
 ): void => {
   useEffect(() => {
     const el = ({ target }: MouseEvent): void => {
-      const eventTarget = target as Node;
-      if (ref.current && !ref.current.contains(eventTarget)) {
-        func();
+      const eventTarget = target as HTMLElement;
+      if (!ref.current?.contains(eventTarget)) {
+        func(eventTarget);
       }
     };
     document.body.addEventListener("click", el);
     return () => {
-      document.body.addEventListener("click", el);
+      document.body.removeEventListener("click", el);
     };
   }, []);
 };
