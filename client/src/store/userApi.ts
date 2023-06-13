@@ -22,7 +22,7 @@ export const usersApi = createApi({
   reducerPath: "users",
   tagTypes: ["Search", "Followers", "Following", "User"],
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_BACKEND_URL}/users`,
+    baseUrl: `${import.meta.env.VITE_BACKEND_URL}/user`,
   }),
   endpoints: (builder) => ({
     getUsers: builder.query<Users[], usersArgs>({
@@ -44,7 +44,7 @@ export const usersApi = createApi({
         method: "PATCH",
         credentials: "include",
       }),
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+      async onQueryStarted(id, { dispatch, queryFulfilled, getState }) {
         const patchResult = [
           dispatch(
             authApi.util.updateQueryData(
@@ -65,6 +65,12 @@ export const usersApi = createApi({
           ),
         ];
         dispatch(usersApi.util.invalidateTags([{ type: "Followers", id }]));
+        const currUserId = (getState() as any).auth.queries[
+          "getCurrentUser(undefined)"
+        ].data._id;
+        dispatch(
+          usersApi.util.invalidateTags([{ type: "Following", id: currUserId }])
+        );
         try {
           await queryFulfilled;
         } catch {
@@ -78,7 +84,7 @@ export const usersApi = createApi({
         method: "PATCH",
         credentials: "include",
       }),
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+      async onQueryStarted(id, { dispatch, queryFulfilled, getState }) {
         const patchResult = [
           dispatch(
             usersApi.util.updateQueryData("getUser", id, (draft) => ({
@@ -99,6 +105,12 @@ export const usersApi = createApi({
           ),
         ];
         dispatch(usersApi.util.invalidateTags([{ type: "Followers", id }]));
+        const currUserId = (getState() as any).auth.queries[
+          "getCurrentUser(undefined)"
+        ].data._id;
+        dispatch(
+          usersApi.util.invalidateTags([{ type: "Following", id: currUserId }])
+        );
         try {
           await queryFulfilled;
         } catch {
