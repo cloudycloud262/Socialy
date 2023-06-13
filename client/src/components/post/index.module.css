@@ -8,11 +8,19 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  flex-grow: 1;
 }
 .postHeader {
   display: flex;
   align-items: center;
   gap: 0.1rem;
+}
+.btnGrp {
+  margin-left: auto;
+}
+.postHeader > :global(.menu-wrapper) {
+  font-size: 1.3rem;
+  margin-left: auto;
 }
 .engagement {
   display: flex;

@@ -7,6 +7,8 @@ import {
   useUnfollowMutation,
 } from "../../store/userApi";
 
+import Loading from "../../components/loading";
+
 import styles from "./index.module.css";
 
 type ProfileProps = {
@@ -26,6 +28,7 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <>
       <div className={styles.dpContainer}>
+        {getUser.isFetching || getUser.isLoading ? <Loading /> : null}
         <img src="/placeholderCover.jpg" alt="" className={styles.cover} />
         <img src="/placeholderDp.png" alt="" className={styles.dp} />
         <div className={`btn-grp ${styles.profileActionBtn}`}>

@@ -41,13 +41,14 @@ const Signup: FC = () => {
           onSubmit={(e) => {
             e.preventDefault();
             const err = signupValidator({ email, username, password });
-            setErrors(err);
             if (!err.email && !err.username && !err.password) {
               signup({ email, username, password });
+            } else {
+              setErrors(err);
             }
           }}
         >
-          <div>
+          <div className="form-input-wrapper">
             <label htmlFor="email-field" className="filled-input">
               <span className="material-icons-outlined">email</span>
               <input
@@ -63,7 +64,7 @@ const Signup: FC = () => {
             </label>
             <span className="fs-small fw-medium error">{errors.email}</span>
           </div>
-          <div>
+          <div className="form-input-wrapper">
             <label htmlFor="username-field" className="filled-input">
               <span className="material-icons-outlined">alternate_email</span>
               <input
@@ -80,7 +81,7 @@ const Signup: FC = () => {
             </label>
             <span className="fs-small fw-medium error">{errors.username}</span>
           </div>
-          <div>
+          <div className="form-input-wrapper">
             <label htmlFor="password-field" className="filled-input">
               <span className="material-icons-outlined">key</span>
               <input

@@ -60,7 +60,7 @@ const EditProfile: FC<EditProfileProps> = (props) => {
     >
       <form onSubmit={updateProfileHandler}>
         {updateStatus.isLoading ? <Loading /> : null}
-        <div>
+        <div className="form-input-wrapper">
           <input
             type="text"
             className="filled-input"
@@ -73,7 +73,7 @@ const EditProfile: FC<EditProfileProps> = (props) => {
           />
           <span className="fs-small fw-medium error">{errors.email}</span>
         </div>
-        <div>
+        <div className="form-input-wrapper">
           <input
             type="text"
             className="filled-input"
@@ -96,9 +96,9 @@ const EditProfile: FC<EditProfileProps> = (props) => {
         <span className="fs-small fw-medium">
           To delete this account, enter the current password
         </span>
-        <div>
+        <div className="form-input-wrapper">
           <input
-            type="text"
+            type="password"
             className="filled-input"
             placeholder="Current Password"
             value={currPassword}

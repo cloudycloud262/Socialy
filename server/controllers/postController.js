@@ -1,4 +1,5 @@
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 import { decodeJWT } from "./authController.js";
 
 // handle errors
@@ -14,7 +15,6 @@ const handleErrors = (err) => {
       errors[properties.path] = properties.message;
     });
   }
-
   return errors;
 };
 
@@ -33,12 +33,51 @@ export const createPost = async (req, res) => {
 };
 
 export const getPosts = async (req, res) => {
-  const query = req.query;
+  let query = req.query;
+  const token = req.cookies.jwt;
 
   try {
-    const posts = await Post.find(query);
+    const userId = await decodeJWT(token);
+    let posts;
+    if (query.userId) {
+      posts = await Post.find(query).sort({ $natural: -1 });
+      const username = (await User.findById(query.userId).select("username"))
+        .username;
+      posts = posts.map((post) => {
+        const temp = post.toObject();
+        temp["username"] = username;
+        return temp;
+      });
+    } else if (query.page) {
+      if (query.page === "home") {
+        const user = await User.findById(userId).select("following");
+        query.userId = user.following;
+        delete query.page;
+      } else if (query.page === "explore") {
+        const user = await User.findById(userId).select("following");
+        query.userId = { $nin: [...user.following, userId] };
+        delete query.page;
+      }
+      posts = await Post.find(query).sort({ $natural: -1 });
+      let userArr = new Set();
+      posts.map((post) => {
+        userArr.add(post.userId);
+      });
+      userArr = Array.from(userArr);
+      const users = await User.find({ _id: userArr }).select("username");
+      const usersMap = new Map();
+      users.forEach((user) => {
+        usersMap.set(String(user._id), user.username);
+      });
+      posts = posts.map((post) => {
+        const temp = post.toObject();
+        temp["username"] = usersMap.get(post.userId);
+        return temp;
+      });
+    }
     res.status(200).json(posts);
   } catch (e) {
+    console.log(e);
     res.status(400).json(e);
   }
 };

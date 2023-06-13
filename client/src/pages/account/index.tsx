@@ -2,21 +2,23 @@ import { FC, useState } from "react";
 import { useGetUsersQuery } from "../../store/userApi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useGetCurrentUserQuery } from "../../store/authApi";
+import { useGetPostsQuery } from "../../store/postApi";
 
 import Profile from "./profile";
 import EditProfile from "./editProfile";
-import Posts from "../../components/posts";
+import Post from "../../components/post";
+import Loading from "../../components/loading";
+import PostForm from "../../components/post/postForm";
 
 import styles from "./index.module.css";
 
 const Account: FC = () => {
   const [showPosts, setShowPosts] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [editPostIndex, setEditPostIndex] = useState(-1);
   const [nav, setNav] = useState("Posts");
   const { id } = useParams();
   const navigate = useNavigate();
-
-  console.log(nav);
 
   const currentUser = useGetCurrentUserQuery();
   const getUsers = useGetUsersQuery(
@@ -29,6 +31,10 @@ const Account: FC = () => {
         (nav !== "Followers" && nav !== "Following") ||
         (!id && !currentUser.data?._id),
     }
+  );
+  const getPosts = useGetPostsQuery(
+    { userId: id || currentUser.data?._id },
+    { skip: !id && !currentUser.data?._id }
   );
 
   if (id === currentUser.data?._id) {
@@ -60,6 +66,12 @@ const Account: FC = () => {
           </span>
         </div>
         <div className="list">
+          {getUsers.isLoading ||
+          getUsers.isFetching ||
+          getPosts.isLoading ||
+          getPosts.isFetching ? (
+            <Loading />
+          ) : null}
           {nav === "Followers" ? (
             getUsers.data?.map((user, index) => (
               <div
@@ -91,7 +103,26 @@ const Account: FC = () => {
               </div>
             ))
           ) : nav === "Posts" ? (
-            <Posts />
+            <div className="list">
+              {getPosts.data?.map((post, index) =>
+                editPostIndex === index ? (
+                  <PostForm
+                    type="update"
+                    post={post}
+                    key={index}
+                    setEditPostIndex={setEditPostIndex}
+                  />
+                ) : (
+                  <Post
+                    key={index}
+                    index={index}
+                    post={post}
+                    setEditPostIndex={setEditPostIndex}
+                    currentUserPost={post.userId === currentUser.data?._id}
+                  />
+                )
+              )}
+            </div>
           ) : null}
         </div>
       </div>

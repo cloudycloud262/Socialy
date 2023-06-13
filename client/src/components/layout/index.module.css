@@ -16,16 +16,13 @@
   flex-grow: 0.7;
   min-width: 300px;
 }
-.postForm {
-  padding: 1rem;
-}
 .center {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   overflow: auto;
 }
-.center > .postForm {
+.center > :global(.create-post-form) {
   display: none;
   border-bottom: 1px solid gainsboro;
 }
@@ -41,6 +38,11 @@
 .nfLink > :global(.material-icons-outlined) {
   font-size: 1.15rem;
 }
+.center > :global(.list),
+.center > :global(.list) > :global(.list) {
+  position: relative;
+  flex-grow: 1;
+}
 
 @media (width<900px) {
   .right {
@@ -51,7 +53,7 @@
   .left {
     display: none;
   }
-  .center > .postForm {
+  .center > :global(.create-post-form) {
     display: flex;
   }
   .center > :global(.list) {

@@ -15,7 +15,7 @@ interface User {
   followingCount: number;
   createdAt: string;
   updatedAt: string;
-  __v: 0;
+  __v: number;
 }
 interface UpdateArgs {
   email: string;

@@ -7,6 +7,10 @@ interface Signup extends Login {
   username: string;
 }
 
+interface Post {
+  body: string;
+}
+
 export const isEmail = (str: string): Boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(str);
@@ -61,6 +65,18 @@ export const loginValidator = (args: Login): Login => {
 
   if (!args.password) {
     res.password = "Please enter your Password";
+  }
+
+  return res;
+};
+
+export const postValidator = (args: Post): Post => {
+  const res = {
+    body: "",
+  };
+
+  if (!args.body) {
+    res.body = "Please write something before posting";
   }
 
   return res;

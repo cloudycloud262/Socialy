@@ -1,16 +1,14 @@
 import { FC } from "react";
 
-import Post from "../posts/post";
 import Layout from "../layout";
 
 import styles from "./index.module.css";
-import postStyles from "../posts/index.module.css";
+import postStyles from "../post/index.module.css";
 
 const Comments: FC = () => {
   return (
     <Layout>
       <div className={`list ${styles.wrapper}`}>
-        <Post />
         <div className="list-header fw-medium fs-medium">Comments</div>
         <div className="list">
           {[...Array(30)].map((_d, index) => (

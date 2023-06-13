@@ -23,9 +23,14 @@ form {
   gap: 0.7rem;
   align-self: stretch;
 }
-form > div {
+.form-input-wrapper {
   display: flex;
   flex-direction: column;
+}
+.create-post-form {
+  padding: 1rem;
+  position: relative;
+  background-color: white;
 }
 
 input,
@@ -110,6 +115,16 @@ button,
   background-color: red;
   color: white;
 }
+.contained-btn.danger-btn {
+  background-color: red;
+  border: 1px solid transparent;
+  color: white;
+}
+.contained-btn.danger-btn:hover {
+  background-color: white;
+  color: red;
+  border: 1px solid;
+}
 
 /* Input */
 .filled-input {
@@ -191,6 +206,7 @@ button,
   transform: scale(0);
   transform-origin: top right;
   transition: 0.15s;
+  z-index: 1;
 }
 .menu-active {
   transform: scale(1);

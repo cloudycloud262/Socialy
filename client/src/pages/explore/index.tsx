@@ -1,14 +1,20 @@
 import { FC } from "react";
+import { useGetPostsQuery } from "../../store/postApi";
 
 import Layout from "../../components/layout";
-import Posts from "../../components/posts";
+import Post from "../../components/post";
+import Loading from "../../components/loading";
 
 const Explore: FC = () => {
+  const getPosts = useGetPostsQuery({ page: "explore" });
+
   return (
     <Layout>
       <div className="list">
-        <span className="fw-medium fs-medium list-header">Explore</span>
-        <Posts />
+        {getPosts.isFetching || getPosts.isLoading ? <Loading /> : null}
+        {getPosts.data?.map((post, index) => (
+          <Post key={index} post={post} index={index} />
+        ))}
       </div>
     </Layout>
   );

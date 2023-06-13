@@ -39,13 +39,14 @@ const Login: FC = () => {
           onSubmit={(e) => {
             e.preventDefault();
             const err = loginValidator({ email, password });
-            setErrors(err);
             if (!err.email && !err.password) {
               login({ email, password });
+            } else {
+              setErrors(err);
             }
           }}
         >
-          <div>
+          <div className="form-input-wrapper">
             <label htmlFor="email-field" className="filled-input">
               <span className="material-icons-outlined">email</span>
               <input
@@ -61,7 +62,7 @@ const Login: FC = () => {
             </label>
             <span className="fs-small fw-medium error">{errors.email}</span>
           </div>
-          <div>
+          <div className="form-input-wrapper">
             <label htmlFor="password-field" className="filled-input">
               <span className="material-icons-outlined">key</span>
               <input

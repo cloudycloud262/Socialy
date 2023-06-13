@@ -78,6 +78,10 @@
 .posts > :global(.list-header) > :global(.material-icons-outlined) {
   display: none;
 }
+.posts > :global(.list) {
+  position: relative;
+  flex-grow: 1;
+}
 
 @media (width<700px) {
   .profile {
