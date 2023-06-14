@@ -119,7 +119,6 @@ export const updateProfile = async (req, res) => {
     });
     res.status(200).json(user._id);
   } catch (e) {
-    console.log(e);
     const errors = handleErrors(e);
     res.status(400).json(errors);
   }
@@ -140,7 +139,6 @@ export const deleteAccount = async (req, res) => {
       res.status(400).json({ currPassword: "Incorrect Password" });
     }
   } catch (e) {
-    console.log(e);
     res.status(400).json(e);
   }
 };

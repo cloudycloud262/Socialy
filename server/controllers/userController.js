@@ -3,7 +3,6 @@ import { decodeJWT } from "./authController.js";
 
 export const getUsers = async (req, res) => {
   const query = {};
-  console.log("A");
 
   try {
     if (req.query.type === "Search") {
@@ -40,7 +39,6 @@ export const getUser = async (req, res) => {
     delete user.followers;
     res.status(200).json(user);
   } catch (e) {
-    console.log(e);
     res.status(400).json(e);
   }
 };

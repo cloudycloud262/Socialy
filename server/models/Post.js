@@ -19,6 +19,10 @@ const postSchema = new mongoose.Schema(
       type: [mongoose.ObjectId],
       default: [],
     },
+    commentsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

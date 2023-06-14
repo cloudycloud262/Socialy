@@ -36,8 +36,6 @@ const Posts: React.FC<PostsProps> = (props) => {
   const [likePost] = useLikeMutation();
   const [unlikePost] = useUnLikeMutation();
 
-  console.log(getPosts.data);
-
   return (
     <div className={`list ${styles.posts}`}>
       {getPosts.isFetching || getPosts.isLoading ? <Loading /> : null}

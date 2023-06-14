@@ -7,10 +7,7 @@ const handleErrors = (err) => {
   let errors = {};
 
   // validation errors
-  if (
-    err.message.includes("post validation failed") ||
-    err.message.includes("Validation failed")
-  ) {
+  if (err.message.includes("comment validation failed")) {
     Object.values(err.errors).forEach(({ properties }) => {
       errors[properties.path] = properties.message;
     });
@@ -76,7 +73,6 @@ export const getPosts = async (req, res) => {
         const temp = post.toObject();
         temp["username"] = usersMap.get(String(post.userId));
         temp["isLiked"] = post.likes.includes(userId);
-        console.log(temp, post.likes, userId);
         delete temp.likes;
         return temp;
       });
