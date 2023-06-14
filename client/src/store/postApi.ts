@@ -1,10 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Post } from "../components/post";
+import { Post } from "../components/posts/post";
+import { PostsArgs } from "../components/posts";
 
-interface PostsArgs {
-  userId?: string;
-  page?: string;
-}
 interface CreatePostArgs {
   body: string;
   userId: string;
@@ -13,8 +10,12 @@ interface UpdatePostArgs {
   id: string;
   body: string;
 }
+interface LikeArgs {
+  id: string;
+  cacheKey: PostsArgs;
+}
 
-export const postsApi = createApi({
+export const postApi = createApi({
   reducerPath: "post",
   tagTypes: ["Posts"],
   baseQuery: fetchBaseQuery({
@@ -57,7 +58,7 @@ export const postsApi = createApi({
           "getCurrentUser(undefined)"
         ].data._id;
         const patchResult = dispatch(
-          postsApi.util.updateQueryData(
+          postApi.util.updateQueryData(
             "getPosts",
             { userId: currUserId },
             (draft) =>
@@ -84,10 +85,54 @@ export const postsApi = createApi({
           "getCurrentUser(undefined)"
         ].data._id;
         const patchResult = dispatch(
-          postsApi.util.updateQueryData(
+          postApi.util.updateQueryData(
             "getPosts",
             { userId: currUserId },
             (draft) => draft.filter((post) => post._id !== id)
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    like: builder.mutation<string, LikeArgs>({
+      query: ({ id }) => ({
+        url: `/${id}/like`,
+        credentials: "include",
+      }),
+      async onQueryStarted({ id, cacheKey }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          postApi.util.updateQueryData("getPosts", cacheKey, (draft) =>
+            draft.map((p) =>
+              p._id === id
+                ? { ...p, likesCount: p.likesCount + 1, isLiked: true }
+                : p
+            )
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    unLike: builder.mutation<string, LikeArgs>({
+      query: ({ id }) => ({
+        url: `/${id}/unlike`,
+        credentials: "include",
+      }),
+      async onQueryStarted({ id, cacheKey }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          postApi.util.updateQueryData("getPosts", cacheKey, (draft) =>
+            draft.map((p) =>
+              p._id === id
+                ? { ...p, likesCount: p.likesCount - 1, isLiked: false }
+                : p
+            )
           )
         );
         try {
@@ -105,4 +150,6 @@ export const {
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
-} = postsApi;
+  useLikeMutation,
+  useUnLikeMutation,
+} = postApi;

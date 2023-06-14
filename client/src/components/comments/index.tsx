@@ -3,7 +3,7 @@ import { FC } from "react";
 import Layout from "../layout";
 
 import styles from "./index.module.css";
-import postStyles from "../post/index.module.css";
+import postStyles from "../posts/index.module.css";
 
 const Comments: FC = () => {
   return (

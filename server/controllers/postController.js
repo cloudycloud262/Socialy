@@ -25,6 +25,7 @@ export const createPost = async (req, res) => {
   try {
     const userId = await decodeJWT(token);
     const post = await Post.create({ ...body, userId });
+    await User.findByIdAndUpdate(userId, { $inc: { postsCount: 1 } });
     res.status(200).json(post._id);
   } catch (e) {
     const errors = handleErrors(e);
@@ -46,6 +47,8 @@ export const getPosts = async (req, res) => {
       posts = posts.map((post) => {
         const temp = post.toObject();
         temp["username"] = username;
+        temp["isLiked"] = post.likes.includes(userId);
+        delete temp.likes;
         return temp;
       });
     } else if (query.page) {
@@ -71,13 +74,15 @@ export const getPosts = async (req, res) => {
       });
       posts = posts.map((post) => {
         const temp = post.toObject();
-        temp["username"] = usersMap.get(post.userId);
+        temp["username"] = usersMap.get(String(post.userId));
+        temp["isLiked"] = post.likes.includes(userId);
+        console.log(temp, post.likes, userId);
+        delete temp.likes;
         return temp;
       });
     }
     res.status(200).json(posts);
   } catch (e) {
-    console.log(e);
     res.status(400).json(e);
   }
 };
@@ -114,10 +119,45 @@ export const deletePost = async (req, res) => {
     const post = await Post.findById(id);
     if (post.userId === userId) {
       await Post.findByIdAndDelete(id);
+      await User.findByIdAndUpdate(userId, { $inc: { postsCount: -1 } });
       res.status(200).json(post._id);
     } else {
       res.status(400).json("You can't delete this post");
     }
+  } catch (e) {
+    res.status(400).json(e);
+  }
+};
+
+export const like = async (req, res) => {
+  const { id } = req.params;
+  const token = req.cookies.jwt;
+
+  try {
+    const userId = await decodeJWT(token);
+    const post = await Post.findByIdAndUpdate(id, {
+      $push: { likes: userId },
+      $inc: { likesCount: 1 },
+    });
+    await User.findByIdAndUpdate(userId, { $push: { likes: id } });
+    res.status(200).json(post._id);
+  } catch (e) {
+    res.status(400).json(e);
+  }
+};
+
+export const unLike = async (req, res) => {
+  const { id } = req.params;
+  const token = req.cookies.jwt;
+
+  try {
+    const userId = await decodeJWT(token);
+    const post = await Post.findByIdAndUpdate(id, {
+      $pull: { likes: userId },
+      $inc: { likesCount: -1 },
+    });
+    await User.findByIdAndUpdate(userId, { $pull: { likes: id } });
+    res.status(200).json(post._id);
   } catch (e) {
     res.status(400).json(e);
   }

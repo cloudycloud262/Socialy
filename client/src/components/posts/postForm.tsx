@@ -5,7 +5,7 @@ import {
   useUpdatePostMutation,
 } from "../../store/postApi";
 import { useGetCurrentUserQuery } from "../../store/authApi";
-import { Post } from ".";
+import { Post } from "./post";
 
 import Loading from "../loading";
 import Textarea from "../textarea";
@@ -73,7 +73,11 @@ const PostForm: FC<PostFormProps> = (props) => {
       </div>
       <div className={`btn-grp ${styles.btnGrp}`}>
         {props.type === "update" ? (
-          <button className="outlined-btn icon-btn danger-btn">
+          <button
+            className="outlined-btn icon-btn danger-btn"
+            type="button"
+            onClick={() => props.setEditPostIndex && props.setEditPostIndex(-1)}
+          >
             <span className="material-icons-outlined">close</span>
             <span className="fs-small fw-medium">Cancel</span>
           </button>

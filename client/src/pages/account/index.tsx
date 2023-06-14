@@ -2,20 +2,17 @@ import { FC, useState } from "react";
 import { useGetUsersQuery } from "../../store/userApi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useGetCurrentUserQuery } from "../../store/authApi";
-import { useGetPostsQuery } from "../../store/postApi";
 
 import Profile from "./profile";
 import EditProfile from "./editProfile";
-import Post from "../../components/post";
 import Loading from "../../components/loading";
-import PostForm from "../../components/post/postForm";
 
 import styles from "./index.module.css";
+import Posts from "../../components/posts";
 
 const Account: FC = () => {
   const [showPosts, setShowPosts] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [editPostIndex, setEditPostIndex] = useState(-1);
   const [nav, setNav] = useState("Posts");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,10 +28,6 @@ const Account: FC = () => {
         (nav !== "Followers" && nav !== "Following") ||
         (!id && !currentUser.data?._id),
     }
-  );
-  const getPosts = useGetPostsQuery(
-    { userId: id || currentUser.data?._id },
-    { skip: !id && !currentUser.data?._id }
   );
 
   if (id === currentUser.data?._id) {
@@ -65,15 +58,10 @@ const Account: FC = () => {
             close
           </span>
         </div>
-        <div className="list">
-          {getUsers.isLoading ||
-          getUsers.isFetching ||
-          getPosts.isLoading ||
-          getPosts.isFetching ? (
-            <Loading />
-          ) : null}
-          {nav === "Followers" ? (
-            getUsers.data?.map((user, index) => (
+        {nav === "Followers" ? (
+          <div className="list">
+            {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
+            {getUsers.data?.map((user, index) => (
               <div
                 className="user-card user-card-hover"
                 key={index}
@@ -86,9 +74,12 @@ const Account: FC = () => {
                 <img src="/placeholderDp.png" alt="" className="dp-icon" />
                 <span className="fw-medium fs-medium">{user.username}</span>
               </div>
-            ))
-          ) : nav === "Following" ? (
-            getUsers.data?.map((user, index) => (
+            ))}
+          </div>
+        ) : nav === "Following" ? (
+          <div className="list">
+            {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
+            {getUsers.data?.map((user, index) => (
               <div
                 className="user-card user-card-hover"
                 key={index}
@@ -101,30 +92,11 @@ const Account: FC = () => {
                 <img src="/placeholderDp.png" alt="" className="dp-icon" />
                 <span className="fw-medium fs-medium">{user.username}</span>
               </div>
-            ))
-          ) : nav === "Posts" ? (
-            <div className="list">
-              {getPosts.data?.map((post, index) =>
-                editPostIndex === index ? (
-                  <PostForm
-                    type="update"
-                    post={post}
-                    key={index}
-                    setEditPostIndex={setEditPostIndex}
-                  />
-                ) : (
-                  <Post
-                    key={index}
-                    index={index}
-                    post={post}
-                    setEditPostIndex={setEditPostIndex}
-                    currentUserPost={post.userId === currentUser.data?._id}
-                  />
-                )
-              )}
-            </div>
-          ) : null}
-        </div>
+            ))}
+          </div>
+        ) : nav === "Posts" ? (
+          <Posts query={{ userId: id || currentUser.data?._id }} />
+        ) : null}
       </div>
     </div>
   );

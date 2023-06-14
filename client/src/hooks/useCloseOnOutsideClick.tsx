@@ -1,14 +1,16 @@
-import { useEffect, RefObject } from "react";
+import { useEffect } from "react";
 
 const useCloseOnOutsideClick = (
-  ref: RefObject<HTMLDivElement>,
+  ref: React.MutableRefObject<HTMLDivElement | null>,
   func: Function
 ): void => {
   useEffect(() => {
     const el = ({ target }: MouseEvent): void => {
-      const eventTarget = target as HTMLElement;
-      if (!ref.current?.contains(eventTarget)) {
-        func(eventTarget);
+      if (ref) {
+        const eventTarget = target as HTMLElement;
+        if (!ref.current?.contains(eventTarget)) {
+          func(eventTarget);
+        }
       }
     };
     document.body.addEventListener("click", el);

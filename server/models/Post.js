@@ -8,8 +8,16 @@ const postSchema = new mongoose.Schema(
       maxlength: [400, "Maximum Post length is 400 characters"],
     },
     userId: {
-      type: String,
+      type: mongoose.ObjectId,
       required: true,
+    },
+    likesCount: {
+      type: Number,
+      default: 0,
+    },
+    likes: {
+      type: [mongoose.ObjectId],
+      default: [],
     },
   },
   { timestamps: true }

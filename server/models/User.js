@@ -38,6 +38,14 @@ const userSchema = new mongoose.Schema(
     following: { type: Array, default: [] },
     followersCount: { type: Number, default: 0 },
     followingCount: { type: Number, default: 0 },
+    likes: {
+      type: [mongoose.ObjectId],
+      default: [],
+    },
+    postsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

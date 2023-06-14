@@ -1,3 +1,7 @@
+.posts {
+  flex-grow: 1;
+  position: relative;
+}
 .postWrapper {
   display: flex;
   background-color: white;
@@ -12,15 +16,19 @@
 }
 .postHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.1rem;
 }
 .btnGrp {
   margin-left: auto;
 }
 .postHeader > :global(.menu-wrapper) {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   margin-left: auto;
+}
+.postHeader > :global(.menu-wrapper) > :global(.material-icons-outlined) {
+  display: flex;
+  font-size: 1.25rem;
 }
 .engagement {
   display: flex;
@@ -33,6 +41,7 @@
   align-items: center;
   gap: 0.25rem;
 }
-.engagement > div > :global(.material-icons-outlined) {
+.engagement > div > :global(.material-icons-outlined),
+.engagement > div > :global(.material-icons) {
   font-size: 1.3rem;
 }

@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
 
-import PostForm from "../post/postForm";
+import PostForm from "../posts/postForm";
 
 import styles from "./index.module.css";
 
