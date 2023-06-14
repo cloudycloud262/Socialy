@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import { decodeJWT } from "./authController.js";
@@ -78,6 +79,24 @@ export const getPosts = async (req, res) => {
       });
     }
     res.status(200).json(posts);
+  } catch (e) {
+    res.status(400).json(e);
+  }
+};
+
+export const getPost = async (req, res) => {
+  const { id } = req.params;
+  const token = req.cookies.jwt;
+
+  try {
+    const userId = await decodeJWT(token);
+    const temp = await Post.findById(id);
+    const username = (await User.findById(temp.userId)).username;
+    const post = temp.toObject();
+    post.isLiked = temp.likes.includes(userId);
+    post.username = username;
+    delete post.likes;
+    res.status(200).json(post);
   } catch (e) {
     res.status(400).json(e);
   }

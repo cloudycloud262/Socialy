@@ -1,6 +1,7 @@
 import { FC, Dispatch, SetStateAction } from "react";
 import { NavigateFunction } from "react-router-dom";
 import { PostsArgs } from ".";
+import { numberFormatter, relTimeFormatter } from "../../utils/formatters";
 
 import styles from "./index.module.css";
 
@@ -12,23 +13,25 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   likesCount: number;
+  commentsCount: number;
   isLiked: boolean;
   __v: number;
 }
 
 type PostProps = {
   post: Post;
-  currentUserPost: boolean;
-  setEditPostIndex: Dispatch<SetStateAction<number>>;
-  index: number;
-  deletePost: Function;
+  currentUserPost?: boolean;
+  setEditPostIndex?: Dispatch<SetStateAction<number>>;
+  index?: number;
+  deletePost?: Function;
   likePost: Function;
   unlikePost: Function;
-  navigate: NavigateFunction;
-  showPostMenu: boolean;
-  setPostMenuIndex: React.Dispatch<React.SetStateAction<number>>;
-  postMenuRef: React.MutableRefObject<HTMLDivElement | null>;
+  navigate?: NavigateFunction;
+  postMenuIndex?: number;
+  setPostMenuIndex?: React.Dispatch<React.SetStateAction<number>>;
+  postMenuRef?: React.MutableRefObject<HTMLDivElement | null>;
   cacheKey: PostsArgs;
+  insideComment?: boolean;
 };
 
 const Post: FC<PostProps> = (props) => {
@@ -41,7 +44,7 @@ const Post: FC<PostProps> = (props) => {
         >
           <span>{props.post.username}</span>
           <span>•</span>
-          <span>5h</span>
+          <span>{relTimeFormatter(props.post.createdAt)}</span>
           {props.currentUserPost ? (
             <div
               className="menu-wrapper"
@@ -49,31 +52,46 @@ const Post: FC<PostProps> = (props) => {
               onClick={(e) => {
                 const eventTarget = e.target as HTMLDivElement;
                 if (eventTarget.classList.contains("material-icons-outlined")) {
-                  props.postMenuRef.current = e.currentTarget;
+                  if (props.postMenuRef) {
+                    props.postMenuRef.current = e.currentTarget;
+                  }
                 }
               }}
             >
               <span
                 className="material-icons-outlined"
                 onClick={() => {
-                  props.setPostMenuIndex((prev) =>
-                    prev === props.index ? -1 : props.index
-                  );
+                  if (
+                    props.setPostMenuIndex &&
+                    props.index &&
+                    props.postMenuIndex
+                  ) {
+                    props.setPostMenuIndex(
+                      props.postMenuIndex === props.index ? -1 : props.index
+                    );
+                  }
                 }}
               >
                 more_vert
               </span>
               <div
-                className={`menu ${props.showPostMenu ? "menu-active " : ""}`}
+                className={`menu ${
+                  props.postMenuIndex === props.index ? "menu-active " : ""
+                }number`}
               >
                 <button
                   className="menu-item transparent-btn icon-btn disabled-text"
                   onClick={() => {
-                    if (props.setEditPostIndex) {
+                    if (
+                      props.setEditPostIndex &&
+                      props.index &&
+                      props.postMenuRef &&
+                      props.setPostMenuIndex
+                    ) {
                       props.setEditPostIndex(props.index);
+                      props.postMenuRef.current = null;
+                      props.setPostMenuIndex(-1);
                     }
-                    props.postMenuRef.current = null;
-                    props.setPostMenuIndex(-1);
                   }}
                 >
                   <span className="material-icons-outlined">edit</span>
@@ -82,9 +100,15 @@ const Post: FC<PostProps> = (props) => {
                 <button
                   className="menu-item danger-btn transparent-btn icon-btn"
                   onClick={() => {
-                    props.deletePost(props.post._id);
-                    props.postMenuRef.current = null;
-                    props.setPostMenuIndex(-1);
+                    if (
+                      props.deletePost &&
+                      props.postMenuRef &&
+                      props.setPostMenuIndex
+                    ) {
+                      props.deletePost(props.post._id);
+                      props.postMenuRef.current = null;
+                      props.setPostMenuIndex(-1);
+                    }
                   }}
                 >
                   <span className="material-icons-outlined">delete</span>
@@ -124,12 +148,20 @@ const Post: FC<PostProps> = (props) => {
                 star_border
               </span>
             )}
-            <span>{props.post.likesCount}</span>
+            <span>{numberFormatter(props.post.likesCount)}</span>
           </div>
-          <div onClick={() => props.navigate(`/post/id`)}>
-            <span className="material-icons-outlined">rate_review</span>
-            <span>150</span>
-          </div>
+          {props.insideComment ? null : (
+            <div
+              onClick={() => {
+                if (props.navigate) {
+                  props.navigate(`/post/${props.post._id}`);
+                }
+              }}
+            >
+              <span className="material-icons-outlined">rate_review</span>
+              <span>{numberFormatter(props.post.commentsCount)}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -32,6 +32,12 @@ export const postApi = createApi({
         { type: "Posts", id: args.userId || args.page },
       ],
     }),
+    getPost: builder.query<Post, string>({
+      query: (id) => ({
+        url: `/${id}`,
+        credentials: "include",
+      }),
+    }),
     createPost: builder.mutation<string, CreatePostArgs>({
       query: ({ userId, ...body }) => ({
         url: "/",
@@ -104,15 +110,27 @@ export const postApi = createApi({
         credentials: "include",
       }),
       async onQueryStarted({ id, cacheKey }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          postApi.util.updateQueryData("getPosts", cacheKey, (draft) =>
-            draft.map((p) =>
-              p._id === id
-                ? { ...p, likesCount: p.likesCount + 1, isLiked: true }
-                : p
+        const patchResult = cacheKey.postId
+          ? dispatch(
+              postApi.util.updateQueryData(
+                "getPost",
+                cacheKey.postId,
+                (draft) => ({
+                  ...draft,
+                  likesCount: draft.likesCount + 1,
+                  isLiked: true,
+                })
+              )
             )
-          )
-        );
+          : dispatch(
+              postApi.util.updateQueryData("getPosts", cacheKey, (draft) =>
+                draft.map((p) =>
+                  p._id === id
+                    ? { ...p, likesCount: p.likesCount + 1, isLiked: true }
+                    : p
+                )
+              )
+            );
         try {
           await queryFulfilled;
         } catch {
@@ -147,6 +165,7 @@ export const postApi = createApi({
 
 export const {
   useGetPostsQuery,
+  useGetPostQuery,
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,

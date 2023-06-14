@@ -17,6 +17,7 @@ import styles from "./index.module.css";
 export interface PostsArgs {
   userId?: string;
   page?: string;
+  postId?: string;
 }
 type PostsProps = {
   query: PostsArgs;
@@ -58,7 +59,7 @@ const Posts: React.FC<PostsProps> = (props) => {
             unlikePost={unlikePost}
             navigate={navigate}
             cacheKey={props.query}
-            showPostMenu={postMenuIndex === index}
+            postMenuIndex={postMenuIndex}
             setPostMenuIndex={setPostMenuIndex}
             postMenuRef={postMenuRef}
             setEditPostIndex={setEditPostIndex}

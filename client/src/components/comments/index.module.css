@@ -1,7 +1,4 @@
-div.wrapper {
-  overflow: visible;
-}
-.wrapper > :global(.list-header) {
+.wrapper > :global(.list) > :global(.list-header) {
   position: sticky;
   top: 0;
 }
