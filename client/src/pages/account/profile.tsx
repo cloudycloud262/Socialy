@@ -4,6 +4,7 @@ import { useGetCurrentUserQuery } from "../../store/authApi";
 import {
   useFollowMutation,
   useGetUserQuery,
+  useRemoveRequestMutation,
   useUnfollowMutation,
 } from "../../store/userApi";
 
@@ -24,6 +25,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const getUser = id ? useGetUserQuery(id) : useGetCurrentUserQuery();
   const [follow] = useFollowMutation();
   const [unfollow] = useUnfollowMutation();
+  const [removeRequest] = useRemoveRequestMutation();
 
   return (
     <>
@@ -41,8 +43,24 @@ const Profile: FC<ProfileProps> = (props) => {
                 <button className="contained-btn" onClick={() => unfollow(id)}>
                   Unfollow
                 </button>
+              ) : getUser.data &&
+                "isRequested" in getUser.data &&
+                getUser.data.isRequested ? (
+                <button
+                  className="contained-btn"
+                  onClick={() => removeRequest(id)}
+                >
+                  Requested
+                </button>
               ) : (
-                <button className="contained-btn" onClick={() => follow(id)}>
+                <button
+                  className="contained-btn"
+                  onClick={() =>
+                    getUser.data &&
+                    "isPrivate" in getUser.data &&
+                    follow({ id, isPrivate: getUser.data?.isPrivate })
+                  }
+                >
                   Follow
                 </button>
               )}
@@ -96,7 +114,9 @@ const Profile: FC<ProfileProps> = (props) => {
             props.setNav("Posts");
           }}
         >
-          <span className="fs-medium fw-medium">150</span>
+          <span className="fs-medium fw-medium">
+            {getUser.data?.postsCount}
+          </span>
           <span className="fs-small fw-thin">Posts</span>
         </button>
       </div>

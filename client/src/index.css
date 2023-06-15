@@ -55,7 +55,6 @@ button,
   padding: 0.6rem;
   outline: none;
   border-radius: 0.15rem;
-  justify-content: center;
   cursor: pointer;
 }
 .btn {
@@ -70,6 +69,7 @@ button,
   background-color: #62a6fe;
   border: 1px solid transparent;
   color: white;
+  justify-content: center;
 }
 .contained-btn:hover {
   background-color: white;
@@ -80,6 +80,7 @@ button,
 .transparent-btn {
   background-color: transparent;
   border: none;
+  justify-content: center;
 }
 .transparent-btn:hover {
   background-color: rgb(237, 237, 237);
@@ -89,6 +90,7 @@ button,
   background-color: transparent;
   color: #62a6fe;
   border: 1px solid;
+  justify-content: center;
 }
 .outlined-btn:hover {
   background-color: #62a6fe;
@@ -308,4 +310,32 @@ button,
 .active-tab {
   background-color: #62a6fe;
   color: white;
+}
+
+.toggle-btn {
+  width: 50px;
+  height: 15px;
+  box-sizing: content-box;
+  border: 2px solid grey;
+  border-radius: 0.3rem;
+  padding: 1.5px;
+  display: flex;
+  transition-duration: 0.2s;
+  transition-property: background-color;
+}
+.toggle-btn-active {
+  border: 2px solid #62a6fe;
+}
+.toggle-btn::before {
+  content: "";
+  height: 15px;
+  width: 15px;
+  background-color: grey;
+  border-radius: 0.2rem;
+  transition-duration: 0.2s;
+  transition-property: transform, background-color;
+}
+.toggle-btn-active::before {
+  background-color: #62a6fe;
+  transform: translateX(35px);
 }

@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useGetUsersQuery } from "../../store/userApi";
+import { useGetUserQuery, useGetUsersQuery } from "../../store/userApi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useGetCurrentUserQuery } from "../../store/authApi";
 
@@ -18,6 +18,7 @@ const Account: FC = () => {
   const navigate = useNavigate();
 
   const currentUser = useGetCurrentUserQuery();
+  const getUser = id ? useGetUserQuery(id) : useGetCurrentUserQuery();
   const getUsers = useGetUsersQuery(
     {
       type: nav as "Followers" | "Following",
@@ -25,6 +26,10 @@ const Account: FC = () => {
     },
     {
       skip:
+        !getUser.isSuccess ||
+        (getUser.data?.isPrivate &&
+          "isFollowing" in getUser.data &&
+          !getUser.data?.isFollowing) ||
         (nav !== "Followers" && nav !== "Following") ||
         (!id && !currentUser.data?._id),
     }
@@ -58,45 +63,57 @@ const Account: FC = () => {
             close
           </span>
         </div>
-        {nav === "Followers" ? (
-          <div className="list">
-            {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
-            {getUsers.data?.map((user, index) => (
-              <div
-                className="user-card user-card-hover"
-                key={index}
-                onClick={() => {
-                  user._id === currentUser.data?._id
-                    ? navigate(`/account`)
-                    : navigate(`/user/${user._id}`);
-                }}
-              >
-                <img src="/placeholderDp.png" alt="" className="dp-icon" />
-                <span className="fw-medium fs-medium">{user.username}</span>
-              </div>
-            ))}
+        {id &&
+        getUser.data?.isPrivate &&
+        "isFollowing" in getUser.data &&
+        !getUser.data?.isFollowing ? (
+          <div className={styles.privatePlaceholder}>
+            <span className="material-icons-outlined">lock</span>
+            <span>This account is private</span>
           </div>
-        ) : nav === "Following" ? (
-          <div className="list">
-            {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
-            {getUsers.data?.map((user, index) => (
-              <div
-                className="user-card user-card-hover"
-                key={index}
-                onClick={() => {
-                  user._id === currentUser.data?._id
-                    ? navigate(`/account`)
-                    : navigate(`/user/${user._id}`);
-                }}
-              >
-                <img src="/placeholderDp.png" alt="" className="dp-icon" />
-                <span className="fw-medium fs-medium">{user.username}</span>
+        ) : (
+          <>
+            {nav === "Followers" ? (
+              <div className="list">
+                {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
+                {getUsers.data?.map((user, index) => (
+                  <div
+                    className="user-card user-card-hover"
+                    key={index}
+                    onClick={() => {
+                      user._id === currentUser.data?._id
+                        ? navigate(`/account`)
+                        : navigate(`/user/${user._id}`);
+                    }}
+                  >
+                    <img src="/placeholderDp.png" alt="" className="dp-icon" />
+                    <span className="fw-medium fs-medium">{user.username}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ) : nav === "Posts" ? (
-          <Posts query={{ userId: id || currentUser.data?._id }} />
-        ) : null}
+            ) : nav === "Following" ? (
+              <div className="list">
+                {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
+                {getUsers.data?.map((user, index) => (
+                  <div
+                    className="user-card user-card-hover"
+                    key={index}
+                    onClick={() => {
+                      user._id === currentUser.data?._id
+                        ? navigate(`/account`)
+                        : navigate(`/user/${user._id}`);
+                    }}
+                  >
+                    <img src="/placeholderDp.png" alt="" className="dp-icon" />
+                    <span className="fw-medium fs-medium">{user.username}</span>
+                  </div>
+                ))}
+              </div>
+            ) : nav === "Posts" ? (
+              <Posts query={{ userId: id || currentUser.data?._id }} />
+            ) : null}
+          </>
+        )}
       </div>
     </div>
   );

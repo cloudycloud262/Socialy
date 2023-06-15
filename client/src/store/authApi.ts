@@ -15,6 +15,8 @@ interface User {
   followingCount: number;
   createdAt: string;
   updatedAt: string;
+  isPrivate: boolean;
+  postsCount: number;
   __v: number;
 }
 interface UpdateArgs {

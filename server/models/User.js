@@ -46,6 +46,18 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    receivedReq: {
+      type: [mongoose.ObjectId],
+      default: [],
+    },
+    sentReq: {
+      type: [mongoose.ObjectId],
+      default: [],
+    },
+    isPrivate: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

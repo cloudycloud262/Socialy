@@ -4,6 +4,7 @@ import {
   useGetCurrentUserQuery,
   useUpdateProfileMutation,
 } from "../../store/authApi";
+import { useSetPrivacyMutation } from "../../store/userApi";
 
 import Loading from "../../components/loading";
 
@@ -26,6 +27,7 @@ const EditProfile: FC<EditProfileProps> = (props) => {
   const currentUser = useGetCurrentUserQuery();
   const [updateProfile, updateStatus] = useUpdateProfileMutation();
   const [deleteAccount, deleteStatus] = useDeleteAccountMutation();
+  const [setPrivacy] = useSetPrivacyMutation();
   useEffect(() => {
     if (currentUser.isSuccess) {
       setEmail(currentUser.data.email);
@@ -58,6 +60,15 @@ const EditProfile: FC<EditProfileProps> = (props) => {
         props.showEditForm ? styles.editProfileActive : ""
       }`}
     >
+      <div className={styles.privacyWrapper}>
+        <span className="fs-medium fw-medium">Private Account</span>
+        <button
+          onClick={() => setPrivacy(!currentUser.data?.isPrivate)}
+          className={`toggle-btn ${
+            currentUser.data?.isPrivate ? "toggle-btn-active" : ""
+          }`}
+        ></button>
+      </div>
       <form onSubmit={updateProfileHandler}>
         {updateStatus.isLoading ? <Loading /> : null}
         <div className="form-input-wrapper">

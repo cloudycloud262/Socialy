@@ -55,8 +55,19 @@ export const getPosts = async (req, res) => {
         query.userId = user.following;
         delete query.page;
       } else if (query.page === "explore") {
+        const distinctUser = new Set();
         const user = await User.findById(userId).select("following");
-        query.userId = { $nin: [...user.following, userId] };
+        user.following.forEach((u) => {
+          distinctUser.add(String(u));
+        });
+        distinctUser.add(String(user._id));
+        const privateAcc = await User.find({
+          isPrivate: true,
+        }).distinct("_id");
+        privateAcc.forEach((u) => {
+          distinctUser.add(String(u));
+        });
+        query.userId = { $nin: Array.from(distinctUser) };
         delete query.page;
       }
       posts = await Post.find(query).sort({ $natural: -1 });

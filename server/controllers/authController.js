@@ -96,7 +96,9 @@ export const getCurrentUser = async (req, res) => {
   const token = req.cookies.jwt;
   try {
     const userId = await decodeJWT(token);
-    const user = await User.findOne({ _id: userId }).select("-password");
+    const user = await User.findOne({ _id: userId }).select(
+      "-password -followers -following -likes -sentReq -receivedReq"
+    );
     if (user) {
       res.status(200).json(user);
     } else {

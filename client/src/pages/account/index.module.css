@@ -69,6 +69,13 @@
 .editProfileActive {
   transform: scaleY(1);
 }
+.privacyWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
 
 .posts {
   flex-grow: 1;
@@ -81,6 +88,21 @@
 .posts > :global(.list) {
   position: relative;
   flex-grow: 1;
+}
+.privatePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  grid-area: 0.3rem;
+}
+.privatePlaceholder > span:nth-child(1) {
+  font-size: 6rem;
+}
+.privatePlaceholder > span:nth-child(2) {
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
 @media (width<700px) {
