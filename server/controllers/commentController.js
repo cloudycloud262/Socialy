@@ -1,6 +1,7 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
 import { decodeJWT } from "./authController.js";
 
 // handle errors
@@ -49,9 +50,18 @@ export const createComment = async (req, res) => {
   try {
     const userId = await decodeJWT(token);
     const comment = await Comment.create({ ...body, userId });
-    await Post.findByIdAndUpdate(body.postId, {
+    const post = await Post.findByIdAndUpdate(body.postId, {
       $inc: { commentsCount: 1 },
     });
+    if (comment.userId !== post.userId) {
+      await Notification.create({
+        type: "comment",
+        comment: comment.body,
+        senderId: comment.userId,
+        receiverId: post.userId,
+        contentId: comment.postId,
+      });
+    }
     res.status(200).json(comment._id);
   } catch (e) {
     const errors = handleErrors(e);
@@ -68,9 +78,16 @@ export const deleteComment = async (req, res) => {
     const comment = await Comment.findById(id);
     if (comment.userId === userId) {
       await Comment.findByIdAndDelete(id);
-      await Post.findByIdAndUpdate(comment.postId, {
+      const post = await Post.findByIdAndUpdate(comment.postId, {
         $inc: { commentsCount: -1 },
       });
+      if (comment.userId !== post.userId) {
+        await Notification.findOneAndDelete({
+          type: "comment",
+          senderId: comment.userId,
+          contentId: comment.postId,
+        });
+      }
       res.status(200).json(comment._id);
     } else {
       res.status(400).json("You can't delete this comment");

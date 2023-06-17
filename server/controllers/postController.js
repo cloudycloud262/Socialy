@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import { decodeJWT } from "./authController.js";
+import Notification from "../models/Notification.js";
 
 // handle errors
 const handleErrors = (err) => {
@@ -165,6 +165,14 @@ export const like = async (req, res) => {
       $push: { likes: userId },
       $inc: { likesCount: 1 },
     });
+    if (post.userId !== userId) {
+      await Notification.create({
+        type: "like",
+        senderId: userId,
+        receiverId: post.userId,
+        contentId: post._id,
+      });
+    }
     await User.findByIdAndUpdate(userId, { $push: { likes: id } });
     res.status(200).json(post._id);
   } catch (e) {
@@ -182,6 +190,13 @@ export const unLike = async (req, res) => {
       $pull: { likes: userId },
       $inc: { likesCount: -1 },
     });
+    if (userId !== post.userId) {
+      await Notification.findOneAndDelete({
+        type: "like",
+        contentId: post._id,
+        senderId: userId,
+      });
+    }
     await User.findByIdAndUpdate(userId, { $pull: { likes: id } });
     res.status(200).json(post._id);
   } catch (e) {

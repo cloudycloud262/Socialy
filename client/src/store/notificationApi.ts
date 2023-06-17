@@ -9,6 +9,8 @@ type notification = {
   updatedAt: string;
   __v: number;
   username: string;
+  contentId?: string;
+  comment?: string;
 };
 
 export const notificationApi = createApi({

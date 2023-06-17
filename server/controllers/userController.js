@@ -148,6 +148,11 @@ export const acceptRequest = async (req, res) => {
       receiverId: userId,
     });
     await Notification.create({
+      type: "follow",
+      senderId: id,
+      receiverId: userId,
+    });
+    await Notification.create({
       type: "accepted",
       receiverId: id,
       senderId: userId,
