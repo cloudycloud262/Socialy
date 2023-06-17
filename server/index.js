@@ -9,6 +9,7 @@ import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
 import postRouter from "./routes/postRouter.js";
 import commentRouter from "./routes/commentRouter.js";
+import notificationRouter from "./routes/notificationRouter.js";
 
 const app = express();
 dotenv.config();
@@ -22,6 +23,7 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
+app.use("/notification", notificationRouter);
 
 const CONNECTION_URL = process.env.DB_URI;
 const PORT = process.env.PORT || 5000;

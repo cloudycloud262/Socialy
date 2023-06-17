@@ -1,3 +1,4 @@
+import Notification from "../models/Notification.js";
 import User from "../models/User.js";
 import { decodeJWT } from "./authController.js";
 
@@ -68,6 +69,11 @@ export const follow = async (req, res) => {
       await User.findByIdAndUpdate(userId, {
         $push: { sentReq: id },
       });
+      await Notification.create({
+        type: "requested",
+        receiverId: id,
+        senderId: userId,
+      });
     } else {
       await User.findByIdAndUpdate(id, {
         $push: { followers: userId },
@@ -77,9 +83,15 @@ export const follow = async (req, res) => {
         $push: { following: id },
         $inc: { followingCount: 1 },
       });
+      await Notification.create({
+        type: "follow",
+        receiverId: id,
+        senderId: userId,
+      });
     }
     res.status(200).json(userId);
   } catch (e) {
+    console.log(e);
     res.status(400).json(e);
   }
 };
@@ -97,6 +109,16 @@ export const unFollow = async (req, res) => {
     await User.findByIdAndUpdate(userId, {
       $pull: { following: id },
       $inc: { followingCount: -1 },
+    });
+    await Notification.findOneAndDelete({
+      type: "follow",
+      senderId: userId,
+      receivedId: id,
+    });
+    await Notification.findOneAndDelete({
+      type: "accepted",
+      senderId: id,
+      receiverId: userId,
     });
     res.status(200).json(userId);
   } catch (e) {
@@ -120,6 +142,17 @@ export const acceptRequest = async (req, res) => {
       $inc: { followersCount: 1 },
       $pull: { receivedReq: id },
     });
+    await Notification.findOneAndDelete({
+      type: "requested",
+      senderId: id,
+      receiverId: userId,
+    });
+    await Notification.create({
+      type: "accepted",
+      receiverId: id,
+      senderId: userId,
+      contentId: id,
+    });
     res.status(200).json(id);
   } catch (e) {
     res.status(400).json(e);
@@ -138,6 +171,11 @@ export const declineRequest = async (req, res) => {
     await User.findByIdAndUpdate(userId, {
       $pull: { receivedReq: id },
     });
+    await Notification.findOneAndDelete({
+      type: "requested",
+      senderId: id,
+      receiverId: userId,
+    });
     res.status(200).json(id);
   } catch (e) {
     res.status(400).json(e);
@@ -155,6 +193,11 @@ export const removeRequest = async (req, res) => {
     });
     await User.findByIdAndUpdate(userId, {
       $pull: { sentReq: id },
+    });
+    await Notification.findOneAndDelete({
+      type: "requested",
+      senderId: userId,
+      receiverId: id,
     });
     res.status(200).json(id);
   } catch (e) {
