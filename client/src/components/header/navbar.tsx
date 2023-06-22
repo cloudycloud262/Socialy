@@ -1,11 +1,18 @@
 import { FC } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useGetCurrentUserQuery } from "../../store/authApi";
+import { useGetNfUnreadCountQuery } from "../../store/notificationApi";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 import styles from "./index.module.css";
 
 const Navbar: FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const currentUser = useGetCurrentUserQuery();
+  const getNfUnreadCount = useGetNfUnreadCountQuery(
+    currentUser.data?.nfReadTime ?? skipToken
+  );
 
   return (
     <div className={styles.navbar}>
@@ -57,6 +64,8 @@ const Navbar: FC = () => {
       >
         {pathname === "/notifications" ? (
           <span className="material-icons">notifications</span>
+        ) : getNfUnreadCount.data ? (
+          <span className="material-icons-outlined">notifications_active</span>
         ) : (
           <span className="material-icons-outlined">notifications</span>
         )}

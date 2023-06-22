@@ -1,13 +1,40 @@
-import { FC } from "react";
-import { useGetNotificationsQuery } from "../../store/notificationApi";
+import { FC, useEffect, useState } from "react";
+import {
+  notificationApi,
+  useGetNfUnreadCountQuery,
+  useGetNotificationsQuery,
+} from "../../store/notificationApi";
+import { useGetCurrentUserQuery } from "../../store/authApi";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../store";
 
 import Layout from "../../components/layout";
 
+import styles from "./index.module.css";
+
 const Notifications: FC = () => {
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const dispatch = useAppDispatch();
 
+  const currentUser = useGetCurrentUserQuery();
+  const getNfUnreadCount = useGetNfUnreadCountQuery(
+    currentUser.data?.nfReadTime ?? skipToken
+  );
   const getNotification = useGetNotificationsQuery();
+
+  useEffect(() => {
+    getNfUnreadCount.isSuccess && setUnreadCount(getNfUnreadCount.data);
+    currentUser.isSuccess &&
+      dispatch(
+        notificationApi.util.updateQueryData(
+          "getNfUnreadCount",
+          currentUser.data?.nfReadTime,
+          () => 0
+        )
+      );
+  }, [getNfUnreadCount.isSuccess]);
 
   return (
     <Layout>
@@ -38,6 +65,11 @@ const Notifications: FC = () => {
                 <span className="disabled-text"> • </span>
                 <span className="fs-small fw-medium disabled-text">7h</span>
               </span>
+              {index > unreadCount ? (
+                <span className={`material-icons ${styles.unreadDot}`}>
+                  fiber_manual_record
+                </span>
+              ) : null}
             </div>
           ))}
         </div>

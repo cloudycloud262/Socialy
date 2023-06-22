@@ -15,7 +15,7 @@ type notification = {
 
 export const notificationApi = createApi({
   reducerPath: "notificationApi",
-  tagTypes: ["Notifications"],
+  tagTypes: ["Notifications", "UnreadCount"],
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}/notification`,
   }),
@@ -28,7 +28,17 @@ export const notificationApi = createApi({
       }),
       providesTags: ["Notifications"],
     }),
+    getNfUnreadCount: builder.query<number, string>({
+      query: (nfReadTime) => ({
+        url: "/unread",
+        params: { nfReadTime },
+        method: "GET",
+        credentials: "include",
+      }),
+      providesTags: ["UnreadCount"],
+    }),
   }),
 });
 
-export const { useGetNotificationsQuery } = notificationApi;
+export const { useGetNotificationsQuery, useGetNfUnreadCountQuery } =
+  notificationApi;

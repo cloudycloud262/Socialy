@@ -58,6 +58,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    nfReadTime: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

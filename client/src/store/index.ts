@@ -4,6 +4,7 @@ import { userApi } from "./userApi";
 import { postApi } from "./postApi";
 import { commentApi } from "./commentApi";
 import { notificationApi } from "./notificationApi";
+import { useDispatch } from "react-redux";
 
 export const store = configureStore({
   reducer: {
@@ -22,3 +23,6 @@ export const store = configureStore({
       notificationApi.middleware
     ),
 });
+
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch: () => AppDispatch = useDispatch;

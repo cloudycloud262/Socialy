@@ -7,6 +7,7 @@ export const getNotifications = async (req, res) => {
 
   try {
     const userId = await decodeJWT(token);
+    await User.findByIdAndUpdate(userId, { nfReadTime: Date.now() });
     let notifications = await Notification.find({
       receiverId: userId,
     }).sort({
@@ -28,6 +29,22 @@ export const getNotifications = async (req, res) => {
       return temp;
     });
     res.status(200).json(notifications);
+  } catch (e) {
+    res.status(400).json(e);
+  }
+};
+
+export const getUnreadNfCount = async (req, res) => {
+  const token = req.cookies.jwt;
+  const { nfReadTime } = req.query;
+
+  try {
+    const userId = await decodeJWT(token);
+    const count = await Notification.count({
+      createdAt: { $gt: nfReadTime },
+      receiverId: userId,
+    });
+    res.status(200).json(count);
   } catch (e) {
     res.status(400).json(e);
   }

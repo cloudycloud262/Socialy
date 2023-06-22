@@ -17,6 +17,7 @@ interface User {
   updatedAt: string;
   isPrivate: boolean;
   postsCount: number;
+  nfReadTime: string;
   __v: number;
 }
 interface UpdateArgs {
