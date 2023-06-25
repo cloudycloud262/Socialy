@@ -1,6 +1,6 @@
 import { FC, Dispatch, SetStateAction } from "react";
 import { NavigateFunction } from "react-router-dom";
-import { PostsArgs } from ".";
+import { PostCacheKey } from ".";
 import { numberFormatter, relTimeFormatter } from "../../utils/formatters";
 
 import styles from "./index.module.css";
@@ -30,7 +30,7 @@ type PostProps = {
   postMenuIndex?: number;
   setPostMenuIndex?: React.Dispatch<React.SetStateAction<number>>;
   postMenuRef?: React.MutableRefObject<HTMLDivElement | null>;
-  cacheKey: PostsArgs;
+  cacheKey: PostCacheKey;
   insideComment?: boolean;
 };
 
@@ -42,7 +42,17 @@ const Post: FC<PostProps> = (props) => {
         <div
           className={`${styles.postHeader} disabled-text fs-small fw-medium`}
         >
-          <span>{props.post.username}</span>
+          <span
+            onClick={() => {
+              if (props.navigate) {
+                props.currentUserPost
+                  ? props.navigate(`/account`)
+                  : props.navigate(`/user/${props.post.userId}`);
+              }
+            }}
+          >
+            {props.post.username}
+          </span>
           <span>•</span>
           <span>{relTimeFormatter(props.post.createdAt)}</span>
           {props.currentUserPost ? (
@@ -63,8 +73,10 @@ const Post: FC<PostProps> = (props) => {
                 onClick={() => {
                   if (
                     props.setPostMenuIndex &&
-                    props.index &&
-                    props.postMenuIndex
+                    typeof props.index === "number" &&
+                    props?.index >= 0 &&
+                    typeof props?.postMenuIndex === "number" &&
+                    props?.postMenuIndex >= -1
                   ) {
                     props.setPostMenuIndex(
                       props.postMenuIndex === props.index ? -1 : props.index

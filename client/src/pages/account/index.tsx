@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { useGetUserQuery, useGetUsersQuery } from "../../store/userApi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useGetCurrentUserQuery } from "../../store/authApi";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 import Profile from "./profile";
 import EditProfile from "./editProfile";
@@ -18,7 +19,7 @@ const Account: FC = () => {
   const navigate = useNavigate();
 
   const currentUser = useGetCurrentUserQuery();
-  const getUser = id ? useGetUserQuery(id) : useGetCurrentUserQuery();
+  const getUser = useGetUserQuery((id || currentUser.data?._id) ?? skipToken);
   const getUsers = useGetUsersQuery(
     {
       type: nav as "Followers" | "Following",
@@ -34,6 +35,8 @@ const Account: FC = () => {
         (!id && !currentUser.data?._id),
     }
   );
+
+  console.log(getUser);
 
   if (id === currentUser.data?._id) {
     return <Navigate to="/account" />;
@@ -73,7 +76,7 @@ const Account: FC = () => {
           </div>
         ) : (
           <>
-            {nav === "Followers" ? (
+            {nav === "Followers" && getUser.isSuccess ? (
               <div className="list">
                 {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
                 {getUsers.data?.map((user, index) => (
@@ -91,7 +94,7 @@ const Account: FC = () => {
                   </div>
                 ))}
               </div>
-            ) : nav === "Following" ? (
+            ) : nav === "Following" && getUser.isSuccess ? (
               <div className="list">
                 {getUsers.isLoading || getUsers.isFetching ? <Loading /> : null}
                 {getUsers.data?.map((user, index) => (
@@ -109,7 +112,7 @@ const Account: FC = () => {
                   </div>
                 ))}
               </div>
-            ) : nav === "Posts" ? (
+            ) : nav === "Posts" && getUser.isSuccess ? (
               <Posts query={{ userId: id || currentUser.data?._id }} />
             ) : null}
           </>

@@ -16,6 +16,10 @@
   flex-grow: 0.7;
   min-width: 300px;
 }
+.right {
+  display: flex;
+  flex-direction: column;
+}
 .center {
   display: flex;
   flex-direction: column;

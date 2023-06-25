@@ -4,15 +4,27 @@ import { decodeJWT } from "./authController.js";
 
 export const getNotifications = async (req, res) => {
   const token = req.cookies.jwt;
+  const query = req.query;
 
   try {
     const userId = await decodeJWT(token);
+    let notifications;
     await User.findByIdAndUpdate(userId, { nfReadTime: Date.now() });
-    let notifications = await Notification.find({
-      receiverId: userId,
-    }).sort({
-      createdAt: -1,
-    });
+    if (query.limit) {
+      notifications = await Notification.find({
+        receiverId: userId,
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .limit(query.limit);
+    } else {
+      notifications = await Notification.find({
+        receiverId: userId,
+      }).sort({
+        createdAt: -1,
+      });
+    }
     let usersId = new Set();
     notifications.forEach((n) => {
       usersId.add(n.senderId);

@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
 import {
   useCreateCommentMutation,
@@ -27,6 +27,7 @@ const Comments: FC = () => {
   const [commentMenuIndex, setCommentMenuIndex] = useState(-1);
   const commentMenuRef = useRef<HTMLDivElement | null>(null);
   const [commentBody, setCommentBody] = useState("");
+  const navigate = useNavigate();
 
   const currentUser = useGetCurrentUserQuery();
   const getComments = useGetCommentsQuery(postId ?? skipToken);
@@ -63,7 +64,15 @@ const Comments: FC = () => {
                   <div
                     className={`${postStyles.postHeader} disabled-text fs-small fw-medium`}
                   >
-                    <span>{comment.username}</span>
+                    <span
+                      onClick={() =>
+                        comment.userId === currentUser.data?._id
+                          ? navigate(`/account`)
+                          : navigate(`/user/${comment.userId}`)
+                      }
+                    >
+                      {comment.username}
+                    </span>
                     <span>•</span>
                     <span>{relTimeFormatter(comment.createdAt)}</span>
                     {currentUser.data?._id === comment.userId ? (

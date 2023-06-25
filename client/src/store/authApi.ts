@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { userApi } from "./userApi";
 
 interface LoginArgs {
   email: string;
@@ -71,6 +72,17 @@ export const authApi = createApi({
         credentials: "include",
         method: "PATCH",
       }),
+      async onQueryStarted({}, { queryFulfilled, getState, dispatch }) {
+        const currUserId = (getState() as any).auth.queries[
+          "getCurrentUser(undefined)"
+        ].data._id;
+        try {
+          await queryFulfilled;
+          dispatch(
+            userApi.util.invalidateTags([{ type: "User", id: currUserId }])
+          );
+        } catch {}
+      },
       invalidatesTags: (res) => (res ? ["CurrentUser"] : []),
     }),
     deleteAccount: builder.mutation<string, string>({

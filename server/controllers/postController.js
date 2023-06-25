@@ -70,7 +70,13 @@ export const getPosts = async (req, res) => {
         query.userId = { $nin: Array.from(distinctUser) };
         delete query.page;
       }
-      posts = await Post.find(query).sort({ $natural: -1 });
+      if (query.limit) {
+        const limit = query.limit;
+        delete query.limit;
+        posts = await Post.find(query).sort({ $natural: -1 }).limit(limit);
+      } else {
+        posts = await Post.find(query).sort({ $natural: -1 });
+      }
       let userArr = new Set();
       posts.map((post) => {
         userArr.add(post.userId);
@@ -121,7 +127,7 @@ export const updatePost = async (req, res) => {
   try {
     const userId = await decodeJWT(token);
     const post = await Post.findById(id);
-    if (post.userId === userId) {
+    if (String(post.userId) === userId) {
       await Post.findByIdAndUpdate(id, body, {
         new: true,
         runValidators: true,
@@ -143,7 +149,7 @@ export const deletePost = async (req, res) => {
   try {
     const userId = await decodeJWT(token);
     const post = await Post.findById(id);
-    if (post.userId === userId) {
+    if (String(post.userId) === userId) {
       await Post.findByIdAndDelete(id);
       await User.findByIdAndUpdate(userId, { $inc: { postsCount: -1 } });
       res.status(200).json(post._id);

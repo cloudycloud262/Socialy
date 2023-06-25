@@ -12,6 +12,9 @@ type notification = {
   contentId?: string;
   comment?: string;
 };
+export type NfsArgs = {
+  limit?: number;
+};
 
 export const notificationApi = createApi({
   reducerPath: "notificationApi",
@@ -20,9 +23,10 @@ export const notificationApi = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}/notification`,
   }),
   endpoints: (builder) => ({
-    getNotifications: builder.query<notification[], void>({
-      query: () => ({
+    getNotifications: builder.query<notification[], NfsArgs>({
+      query: (params) => ({
         url: "/",
+        params,
         method: "GET",
         credentials: "include",
       }),

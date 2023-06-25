@@ -1,7 +1,9 @@
 import { FC, ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import PostForm from "../posts/postForm";
+import Posts from "../posts";
+import Notifications from "../notifications";
 
 import styles from "./index.module.css";
 
@@ -10,6 +12,8 @@ type LayoutProps = {
 };
 
 const Layout: FC<LayoutProps> = (props) => {
+  const { pathname } = useLocation();
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.left}>
@@ -20,26 +24,26 @@ const Layout: FC<LayoutProps> = (props) => {
         {props.children}
       </div>
       <div className={styles.right}>
-        <div className="list">
-          <span className="list-header fw-medium fs-medium">Notifications</span>
+        {pathname === "/explore" ? (
           <div className="list">
-            {[...Array(5)].map((_d, index) => (
-              <div className="user-card" key={index}>
-                <img src="/placeholderDp.png" alt="" className="dp-icon" />
-                <span className="fs-small fw-medium">
-                  Username started following you with 100 others people. Are we
-                  goin to ignore all of tha{" "}
-                  <span className="disabled-text">•</span>
-                  <span className="fs-small fw-medium disabled-text">7h</span>
-                </span>
-              </div>
-            ))}
+            <Notifications query={{ limit: 5 }} isSideCard={true} />
             <Link className={styles.nfLink} to="/notifications">
               <span className="fs-small fw-medium">Show All Notifications</span>
               <span className="material-icons-outlined">arrow_forward</span>
             </Link>
           </div>
-        </div>
+        ) : (
+          <div className="list">
+            <div className="list">
+              <span className="list-header fw-medium fs-medium">New Posts</span>
+              <Posts query={{ page: "explore", limit: 5 }} />
+              <Link className={styles.nfLink} to="/explore">
+                <span className="fs-small fw-medium">Explore</span>
+                <span className="material-icons-outlined">arrow_forward</span>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

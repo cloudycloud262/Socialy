@@ -7,6 +7,7 @@ import {
   useRemoveRequestMutation,
   useUnfollowMutation,
 } from "../../store/userApi";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 import Loading from "../../components/loading";
 
@@ -22,7 +23,8 @@ type ProfileProps = {
 const Profile: FC<ProfileProps> = (props) => {
   const { id } = useParams();
 
-  const getUser = id ? useGetUserQuery(id) : useGetCurrentUserQuery();
+  const currentUser = useGetCurrentUserQuery();
+  const getUser = useGetUserQuery((id || currentUser.data?._id) ?? skipToken);
   const [follow] = useFollowMutation();
   const [unfollow] = useUnfollowMutation();
   const [removeRequest] = useRemoveRequestMutation();

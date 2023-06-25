@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Post } from "../components/posts/post";
-import { PostsArgs } from "../components/posts";
+import { PostCacheKey, PostsArgs } from "../components/posts";
+import { userApi } from "./userApi";
 
 interface CreatePostArgs {
   body: string;
@@ -12,7 +13,7 @@ interface UpdatePostArgs {
 }
 interface LikeArgs {
   id: string;
-  cacheKey: PostsArgs;
+  cacheKey: PostCacheKey;
 }
 
 export const postApi = createApi({
@@ -45,6 +46,19 @@ export const postApi = createApi({
         method: "POST",
         credentials: "include",
       }),
+      async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          userApi.util.updateQueryData("getUser", userId, (draft) => ({
+            ...draft,
+            postsCount: draft.postsCount + 1,
+          }))
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: (_res, _err, args) => [
         { type: "Posts", id: args.userId },
       ],
@@ -90,17 +104,25 @@ export const postApi = createApi({
         const currUserId = (getState() as any).auth.queries[
           "getCurrentUser(undefined)"
         ].data._id;
-        const patchResult = dispatch(
-          postApi.util.updateQueryData(
-            "getPosts",
-            { userId: currUserId },
-            (draft) => draft.filter((post) => post._id !== id)
-          )
-        );
+        const patchResult = [
+          dispatch(
+            postApi.util.updateQueryData(
+              "getPosts",
+              { userId: currUserId },
+              (draft) => draft.filter((post) => post._id !== id)
+            )
+          ),
+          dispatch(
+            userApi.util.updateQueryData("getUser", currUserId, (draft) => ({
+              ...draft,
+              postsCount: draft.postsCount - 1,
+            }))
+          ),
+        ];
         try {
           await queryFulfilled;
         } catch {
-          patchResult.undo();
+          patchResult.forEach((pr) => pr.undo());
         }
       },
     }),
@@ -144,15 +166,27 @@ export const postApi = createApi({
         credentials: "include",
       }),
       async onQueryStarted({ id, cacheKey }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          postApi.util.updateQueryData("getPosts", cacheKey, (draft) =>
-            draft.map((p) =>
-              p._id === id
-                ? { ...p, likesCount: p.likesCount - 1, isLiked: false }
-                : p
+        const patchResult = cacheKey.postId
+          ? dispatch(
+              postApi.util.updateQueryData(
+                "getPost",
+                cacheKey.postId,
+                (draft) => ({
+                  ...draft,
+                  likesCount: draft.likesCount - 1,
+                  isLiked: false,
+                })
+              )
             )
-          )
-        );
+          : dispatch(
+              postApi.util.updateQueryData("getPosts", cacheKey, (draft) =>
+                draft.map((p) =>
+                  p._id === id
+                    ? { ...p, likesCount: p.likesCount - 1, isLiked: false }
+                    : p
+                )
+              )
+            );
         try {
           await queryFulfilled;
         } catch {
