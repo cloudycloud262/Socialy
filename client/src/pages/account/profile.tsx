@@ -1,5 +1,5 @@
 import { FC, Dispatch, SetStateAction } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetCurrentUserQuery } from "../../store/authApi";
 import {
   useFollowMutation,
@@ -8,6 +8,7 @@ import {
   useUnfollowMutation,
 } from "../../store/userApi";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { v4 as uuidv4 } from "uuid";
 
 import Loading from "../../components/loading";
 
@@ -22,6 +23,7 @@ type ProfileProps = {
 
 const Profile: FC<ProfileProps> = (props) => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const currentUser = useGetCurrentUserQuery();
   const getUser = useGetUserQuery((id || currentUser.data?._id) ?? skipToken);
@@ -38,7 +40,20 @@ const Profile: FC<ProfileProps> = (props) => {
         <div className={`btn-grp ${styles.profileActionBtn}`}>
           {id ? (
             <div className="btn-grp">
-              <button className="outlined-btn">Chat</button>
+              <button
+                className="outlined-btn"
+                onClick={() => {
+                  if (getUser.data) {
+                    getUser.data?.chatId
+                      ? navigate(`/chats/${getUser.data?.chatId}`)
+                      : navigate(
+                          `/chats/${uuidv4()}?userId=${getUser.data._id}`
+                        );
+                  }
+                }}
+              >
+                Chat
+              </button>
               {getUser.data &&
               "isFollowing" in getUser.data &&
               getUser.data.isFollowing ? (

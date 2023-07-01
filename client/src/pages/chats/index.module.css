@@ -3,6 +3,7 @@
   overflow: auto;
   background-color: gainsboro;
   gap: 2px;
+  flex-grow: 1;
   position: relative;
 }
 
@@ -11,6 +12,7 @@
   max-width: 450px;
   min-width: 300px;
   flex-basis: 0;
+  position: relative;
 }
 
 .room {
@@ -21,6 +23,7 @@
   flex-basis: 0;
   background-color: gainsboro;
   overflow: auto;
+  position: relative;
 }
 .roomHeader > :global(.material-icons-outlined) {
   display: none;
@@ -34,6 +37,7 @@
   flex-direction: column;
   gap: 0.3rem;
   padding: 0.3rem 0.6rem;
+  flex-direction: column-reverse;
 }
 .bubble {
   padding: 0.4rem 0.8rem;
@@ -42,6 +46,15 @@
   box-sizing: border-box;
   white-space: pre-wrap;
   word-break: break-word;
+}
+.placeholder {
+  background-color: white;
+  flex-grow: 1;
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .sentBubble {
   margin-left: auto;

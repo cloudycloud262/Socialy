@@ -5,12 +5,14 @@ import { postApi } from "./postApi";
 import { commentApi } from "./commentApi";
 import { notificationApi } from "./notificationApi";
 import { useDispatch } from "react-redux";
+import { chatApi } from "./chatApi";
 
 export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [postApi.reducerPath]: postApi.reducer,
+    [chatApi.reducerPath]: chatApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
   },
@@ -19,6 +21,7 @@ export const store = configureStore({
       authApi.middleware,
       userApi.middleware,
       postApi.middleware,
+      chatApi.middleware,
       commentApi.middleware,
       notificationApi.middleware
     ),

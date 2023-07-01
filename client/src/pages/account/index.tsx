@@ -36,8 +36,6 @@ const Account: FC = () => {
     }
   );
 
-  console.log(getUser);
-
   if (id === currentUser.data?._id) {
     return <Navigate to="/account" />;
   }

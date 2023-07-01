@@ -1,3 +1,4 @@
+import Chat from "../models/Chat.js";
 import Notification from "../models/Notification.js";
 import User from "../models/User.js";
 import { decodeJWT } from "./authController.js";
@@ -47,10 +48,14 @@ export const getUser = async (req, res) => {
     if (!user["isFollowing"]) {
       user["isRequested"] = temp.receivedReq.includes(userId);
     }
+    const chatId = (await Chat.findOne({ users: { $all: [userId, id] } }))
+      ?.uuid;
+    if (chatId) user.chatId = chatId;
     delete user.followers;
     delete user.receivedReq;
     res.status(200).json(user);
   } catch (e) {
+    console.log(e);
     res.status(400).json(e);
   }
 };

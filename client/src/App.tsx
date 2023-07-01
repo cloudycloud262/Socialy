@@ -51,6 +51,10 @@ const App: FC = () => {
           }
         />
         <Route
+          path="/chats/:id"
+          element={currentUser.isSuccess ? <Chats /> : <Navigate to="/login" />}
+        />
+        <Route
           path="/chats"
           element={currentUser.isSuccess ? <Chats /> : <Navigate to="/login" />}
         />

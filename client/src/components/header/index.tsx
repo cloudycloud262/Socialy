@@ -3,6 +3,8 @@ import useCloseOnOutsideClick from "../../hooks/useCloseOnOutsideClick";
 import { useNavigate } from "react-router-dom";
 import { useGetCurrentUserQuery, useLogoutMutation } from "../../store/authApi";
 import { useGetUsersQuery } from "../../store/userApi";
+import socket from "../../socket";
+import useChatsSocketHooks from "../../hooks/useChatsSocketHooks";
 
 import Navbar from "./navbar";
 import Loading from "../loading";
@@ -37,7 +39,11 @@ const Header: FC = () => {
       clearTimeout(to);
     };
   }, [searchTerm.term]);
+  useEffect(() => {
+    socket.emit("add-user", currentUser.data?._id);
+  }, []);
   useCloseOnOutsideClick(accountMenuRef, () => setShowAccMenu(false));
+  useChatsSocketHooks();
   useCloseOnOutsideClick(searchWrapperRef, (target: HTMLElement) => {
     if (!searchButtonRef.current?.contains(target)) {
       setShowSearchBar(false);

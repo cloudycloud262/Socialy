@@ -1,32 +1,105 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useGetUserQuery } from "../../store/userApi";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+import {
+  chatApi,
+  useGetChatsQuery,
+  useGetMessagesQuery,
+} from "../../store/chatApi";
+import socket from "../../socket";
+import { useGetCurrentUserQuery } from "../../store/authApi";
+import { useAppDispatch } from "../../store";
 
 import Textarea from "../../components/textarea";
+import Loading from "../../components/loading";
 
 import styles from "./index.module.css";
 
 const Chats: FC = () => {
+  const searchParams = Object.fromEntries(useSearchParams()[0]);
   const [messageBody, setMessageBody] = useState("");
   const [showChatRoom, setShowChatRoom] = useState(false);
-  const [activeChat, setActiveChat] = useState(-1);
+  const { id } = useParams();
+  const [activeChatIndex, setActiveChatIndex] = useState(-1);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const getUser = useGetUserQuery(searchParams.userId ?? skipToken);
+  const currentUser = useGetCurrentUserQuery();
+  const getChats = useGetChatsQuery();
+  const getMessages = useGetMessagesQuery(id ?? skipToken);
+
+  useEffect(() => {
+    getChats.isSuccess &&
+      setActiveChatIndex(getChats.data.findIndex((c) => c.uuid === id));
+  }, [getChats.isSuccess, id]);
+
+  const sendMessageHandler = () => {
+    console.log(
+      getChats.data?.[activeChatIndex]?.userId,
+      "A",
+      searchParams.userId,
+      "B"
+    );
+    if (
+      id &&
+      currentUser.data &&
+      (getChats.data?.[activeChatIndex]?.userId || searchParams.userId)
+    ) {
+      const messageObj = {
+        body: messageBody,
+        chatId: id,
+        senderId: currentUser.data._id,
+      };
+      socket.emit("send-message", messageObj, {
+        isNew: searchParams.userId,
+        receiverId:
+          getChats.data?.[activeChatIndex]?.userId || searchParams.userId,
+      });
+      if (searchParams.userId) {
+        dispatch(
+          chatApi.util.updateQueryData("getChats", undefined, (draft) => [
+            {
+              username: getUser.data ? getUser.data.username : "",
+              uuid: messageObj.chatId,
+              userId: messageObj.senderId,
+            },
+            ...draft,
+          ])
+        );
+        setActiveChatIndex(0);
+      }
+      dispatch(
+        chatApi.util.updateQueryData("getMessages", id, (draft) => {
+          draft.push(messageObj);
+          return draft;
+        })
+      );
+      navigate(`/chats/${id}`);
+      setMessageBody("");
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={`list ${styles.list}`}>
+        {getChats.isFetching || getChats.isLoading ? <Loading /> : null}
         <span className="list-header fs-medium fw-medium">Chats</span>
         <div className="list">
-          {[...Array(30)].map((_d, index) => (
+          {getChats.data?.map((chat, index) => (
             <div
               className={`user-card user-card-hover ${
-                activeChat === index ? "user-card-active" : ""
+                activeChatIndex === index ? "user-card-active" : ""
               }`}
               key={index}
               onClick={() => {
-                setActiveChat(index);
                 setShowChatRoom(true);
+                navigate(`/chats/${chat.uuid}`);
               }}
             >
               <img src="/placeholderDp.png" alt="" className="dp-icon" />
-              <span className="fs-medium fw-medium">Username</span>
+              <span className="fs-medium fw-medium">{chat.username}</span>
             </div>
           ))}
         </div>
@@ -34,50 +107,61 @@ const Chats: FC = () => {
       <div
         className={`${styles.room} ${showChatRoom ? styles.roomActive : ""}`}
       >
-        <div className={`user-card ${styles.roomHeader}`}>
-          <img src="/placeholderDp.png" alt="" className="dp-icon" />
-          <span className="fs-medium fw-medium">
-            Usernamefsdfdsfsfdsfuisdhsdifhsdifhsdiufhdsiufhsi
-          </span>
-          <span
-            className="material-icons-outlined"
-            onClick={() => setShowChatRoom(false)}
-          >
-            close
-          </span>
-        </div>
-        <div className={styles.chats}>
-          {[...Array(20)].map((_d, index) => (
-            <div
-              className={`${styles.receivedBubble} ${styles.bubble} fw-medium fs-medium`}
-              key={index}
+        {activeChatIndex >= 0 || searchParams.userId ? (
+          <div className={`user-card ${styles.roomHeader}`}>
+            <img src="/placeholderDp.png" alt="" className="dp-icon" />
+            <span className="fs-medium fw-medium">
+              {getChats.data?.[activeChatIndex]?.username ||
+                getUser.data?.username}
+            </span>
+            <span
+              className="material-icons-outlined"
+              onClick={() => setShowChatRoom(false)}
             >
-              Hello
-            </div>
-          ))}
-          <div
-            className={`${styles.nfBubble} ${styles.bubble} fw-medium fs-medium`}
-          >
-            Unread Messages
+              close
+            </span>
           </div>
-          {[...Array(20)].map((_d, index) => (
-            <div
-              className={`${styles.sentBubble} ${styles.bubble} fw-medium fs-medium`}
-              key={index}
+        ) : null}
+        {activeChatIndex >= 0 || searchParams.userId ? (
+          <div className={styles.chats}>
+            {getMessages.isFetching || getMessages.isLoading ? (
+              <Loading />
+            ) : null}
+            {getMessages.data
+              ?.slice(0)
+              .reverse()
+              .map((message, index) => (
+                <div
+                  className={`${
+                    message.senderId === currentUser.data?._id
+                      ? styles.sentBubble
+                      : styles.receivedBubble
+                  } ${styles.bubble} fw-medium fs-medium`}
+                  key={index}
+                >
+                  {message.body}
+                </div>
+              ))}
+          </div>
+        ) : (
+          <div className={styles.placeholder}>Click on a chat</div>
+        )}
+        {activeChatIndex >= 0 || searchParams.userId ? (
+          <div className="chat-area">
+            <Textarea
+              value={messageBody}
+              placeholder="Start Chatting..."
+              onChange={(val) => setMessageBody(val)}
+              className="filled-input"
+            />
+            <span
+              className="material-icons-outlined"
+              onClick={() => sendMessageHandler()}
             >
-              Sent
-            </div>
-          ))}
-        </div>
-        <div className="chat-area">
-          <Textarea
-            value={messageBody}
-            placeholder="Start Chatting..."
-            onChange={(val) => setMessageBody(val)}
-            className="filled-input"
-          />
-          <span className="material-icons-outlined">send</span>
-        </div>
+              send
+            </span>
+          </div>
+        ) : null}
       </div>
     </div>
   );

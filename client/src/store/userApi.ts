@@ -14,6 +14,7 @@ interface User {
   isRequested: boolean;
   isPrivate: boolean;
   postsCount: number;
+  chatId?: string;
 }
 type usersArgs = {
   username?: string;
